@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://b71k2i5e2eun5"]
+
+[ext_resource type="Script" path="res://color_circle.gd" id="1_a4cec"]
+
+[node name="ColorCircle" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2(2.08165e-12, 2.08165e-12)
+script = ExtResource("1_a4cec")

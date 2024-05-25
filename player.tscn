@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0nli4j2k12vh"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_dh41o"]
+
+[node name="Player" type="RigidBody2D"]
+center_of_mass_mode = 1
+script = ExtResource("1_dh41o")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-68, -80)
+scale = Vector2(2, 2)
+polygon = PackedVector2Array(2.08165e-12, 2.08165e-12, 2.08165e-12, 80, 69, 40)
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(-68, -80)
+scale = Vector2(2, 2)
+color = Color(0.4402, 0.71, 0.68302, 1)
+polygon = PackedVector2Array(2.08165e-12, 2.08165e-12, 2.08165e-12, 80, 69, 40)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.1, 0.1)
+
+[node name="Exhaust" type="Polygon2D" parent="."]
+position = Vector2(-68, 0)
+color = Color(0.7134, 0.87, 0.85434, 1)
+polygon = PackedVector2Array(2.08165e-12, -30, -200, 2.08165e-12, 2.08165e-12, 30)

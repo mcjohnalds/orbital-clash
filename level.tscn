@@ -1,0 +1,104 @@
+[gd_scene load_steps=8 format=3 uid="uid://c77cunsi4i00u"]
+
+[ext_resource type="Script" path="res://level.gd" id="1_br7jx"]
+[ext_resource type="PackedScene" uid="uid://d0nli4j2k12vh" path="res://player.tscn" id="2_qsgls"]
+[ext_resource type="Texture2D" uid="uid://bxsl4ymimhl7n" path="res://seamless_space.png" id="2_rodnq"]
+[ext_resource type="PackedScene" uid="uid://dukplif6fnic3" path="res://planet.tscn" id="4_fc4mb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_83cng"]
+bg_color = Color(1, 1, 1, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6q34"]
+bg_color = Color(1, 0.788235, 0.788235, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6pjd"]
+bg_color = Color(0.79, 1, 0.9685, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_br7jx")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.01, 0.01)
+motion_mirroring = Vector2(2048, 2048)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+modulate = Color(0.450648, 0.450648, 0.450648, 1)
+texture_repeat = 2
+scale = Vector2(2, 2)
+texture = ExtResource("2_rodnq")
+centered = false
+
+[node name="Player" parent="." instance=ExtResource("2_qsgls")]
+
+[node name="Planets" type="Node2D" parent="."]
+
+[node name="Planet1" parent="Planets" instance=ExtResource("4_fc4mb")]
+position = Vector2(23208, 478)
+
+[node name="Planet2" parent="Planets" instance=ExtResource("4_fc4mb")]
+position = Vector2(-9829, 89)
+
+[node name="Planet3" parent="Planets" instance=ExtResource("4_fc4mb")]
+position = Vector2(3664, 20409)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Health" type="Panel" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = -48.0
+offset_right = 228.0
+offset_bottom = -8.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
+
+[node name="Fill" type="Panel" parent="CanvasLayer/Health"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 217.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_m6q34")
+
+[node name="Boost" type="Panel" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = -98.0
+offset_right = 228.0
+offset_bottom = -58.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
+
+[node name="Fill" type="Panel" parent="CanvasLayer/Boost"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 217.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6pjd")
