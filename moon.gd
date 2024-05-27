@@ -1,9 +1,10 @@
-class_name Planet
+class_name Moon
 extends Area2D
 
-var mass := 20000000000.0
+var planet: Planet
+var planet_r: float
+var planet_theta: float
 var circle: CircleShape2D
-var moon: Moon
 @onready var color_circle: ColorCircle = $ColorCircle
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 

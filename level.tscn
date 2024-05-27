@@ -51,13 +51,16 @@ centered = false
 [node name="Planets" type="Node2D" parent="."]
 
 [node name="Planet1" parent="Planets" instance=ExtResource("4_fc4mb")]
-position = Vector2(23208, 478)
+position = Vector2(32936, -22562)
 
 [node name="Planet2" parent="Planets" instance=ExtResource("4_fc4mb")]
-position = Vector2(-9829, 89)
+position = Vector2(-18533, 1881)
 
 [node name="Planet3" parent="Planets" instance=ExtResource("4_fc4mb")]
-position = Vector2(3664, 20409)
+position = Vector2(131224, 68090)
+
+[node name="Planet4" parent="Planets" instance=ExtResource("4_fc4mb")]
+position = Vector2(65029, 122191)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
