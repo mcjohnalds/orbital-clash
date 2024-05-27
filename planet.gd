@@ -1,7 +1,7 @@
 class_name Planet
 extends Area2D
 
-var mass := 20000000000.0
+var mass := 50000000.0
 var circle: CircleShape2D
 var moon: Moon
 @onready var color_circle: ColorCircle = $ColorCircle

@@ -3,9 +3,7 @@ extends RigidBody2D
 
 const COLOR := Color("70b5ae")
 const CANNON_FIRE_RATE := 2.0
-const CANNON_BULLET_SPEED := 6000.0
 const AUTO_TURRET_FIRE_RATE := 10.0
-const AUTO_TURRET_BULLET_SPEED := 3000.0
 
 @onready var camera: Camera2D = $Camera2D
 @onready var exhaust: Node2D = $Exhaust

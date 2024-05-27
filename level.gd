@@ -1,6 +1,7 @@
 class_name Level
 extends Node2D
 
+const BULLET_SPEED := 300.0
 const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
@@ -17,7 +18,7 @@ const ENEMY_DAMAGE := 0.05
 
 func _ready() -> void:
 	var planet_1: Planet = get_tree().get_nodes_in_group("planets")[0]
-	var player_planet_r := 80000.0
+	var player_planet_r := 4000.0
 	player.global_position = planet_1.global_position + Vector2(player_planet_r, 0.0)
 	var player_orbital_speed := sqrt(GRAVITY * planet_1.mass / player_planet_r)
 	player.linear_velocity = Vector2(0.0, player_orbital_speed)
@@ -26,8 +27,8 @@ func _ready() -> void:
 		planet.color_circle.color = PLANET_ENEMY_COLOR
 		planet.body_entered.connect(on_planet_body_entered)
 
-		var min_r := 1000.0
-		var max_r := 30000.0
+		var min_r := 50.0
+		var max_r := 1500.0
 
 		var moon: Moon = moon_scene.instantiate()
 		moon.planet = planet
@@ -62,7 +63,7 @@ func physics_process_player(delta) -> void:
 		return
 
 	var mouse_global_position := player.camera.global_position - player.camera.get_viewport_rect().size / 2.0 + get_viewport().get_mouse_position()
-	var max_torque := 2000000.0
+	var max_torque := 200000.0
 	var kp := 5.0
 	var kd := 2.0
 	var angle := player.get_angle_to(mouse_global_position)
@@ -70,12 +71,12 @@ func physics_process_player(delta) -> void:
 	var actual_torque := clampf(desired_torque, -max_torque, max_torque)
 	player.apply_torque(actual_torque)
 
-	var thrust := 3000.0
+	var thrust := 200.0
 	var thrusting := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and player.boost > 0.0
 	if thrusting:
 		player.apply_central_force(player.transform.x * thrust)
 	player.exhaust.visible = thrusting
-	var boost_m := -1.0 if thrusting else 1.0
+	var boost_m := -0.2 if thrusting else 0.1
 	player.boost = clampf(player.boost + boost_m * delta, 0.0, 1.0)
 
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
@@ -88,7 +89,7 @@ func physics_process_player(delta) -> void:
 		player.cannon_last_fired_at = get_ticks_sec()
 		var bullet: Bullet = bullet_scene.instantiate()
 		bullet.position = player.position
-		bullet.velocity = player.linear_velocity + player.transform.x * Player.CANNON_BULLET_SPEED
+		bullet.velocity = player.linear_velocity + player.transform.x * BULLET_SPEED
 		bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 		bullet.created_at = get_ticks_sec()
@@ -115,7 +116,7 @@ func physics_process_player(delta) -> void:
 		if nearest_enemy:
 			dir = player.position.direction_to(nearest_enemy.position)
 
-		bullet.velocity = player.linear_velocity + dir * Player.AUTO_TURRET_BULLET_SPEED
+		bullet.velocity = player.linear_velocity + dir * BULLET_SPEED
 		bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 		bullet.created_at = get_ticks_sec()
@@ -138,7 +139,7 @@ func physics_process_bullets(delta: float) -> void:
 			bullet.velocity += d * GRAVITY * planet.mass / (r ** 2.0) * delta
 
 		bullet.position += bullet.velocity * delta
-		var lifetime := 3.0
+		var lifetime := 7.0
 
 		if get_ticks_sec() - bullet.created_at > lifetime:
 			bullet.queue_free()
@@ -161,10 +162,9 @@ func physics_process_enemy(delta: float) -> void:
 				enemy.last_fired_at = get_ticks_sec()
 				var bullet: Bullet = bullet_scene.instantiate()
 				bullet.position = enemy.position
-				var bullet_speed := 5000.0
 				var bullet_rot := enemy.rotation + randf_range(-1.0, 1.0) * 0.3
 				var bullet_dir := Vector2.from_angle(bullet_rot)
-				bullet.velocity = velocity + bullet_dir * bullet_speed
+				bullet.velocity = velocity + bullet_dir * BULLET_SPEED
 				bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 				bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 				bullet.created_at = get_ticks_sec()
