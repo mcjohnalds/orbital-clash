@@ -14,3 +14,4 @@ var cannon_enabled := true
 var cannon_last_fired_at := -10000.0
 var auto_turret_enabled := false
 var auto_turret_last_fired_at := -10000.0
+var last_hit_at := -10000.0

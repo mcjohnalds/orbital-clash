@@ -6,7 +6,8 @@ const BULLET_SPEED := 350.0
 const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
-const ENEMY_DAMAGE := 0.05
+const ENEMY_DAMAGE := 0.17
+const PLAYER_DAMAGE_COOLDOWN := 8.0
 @onready var player: Player = $Player
 @onready var bullet_scene := preload("res://bullet.tscn")
 @onready var moon_scene := preload("res://moon.tscn")
@@ -83,6 +84,7 @@ func physics_process_player(delta) -> void:
 	player.exhaust.visible = thrusting
 	var boost_m := -0.2 if thrusting else 0.1
 	player.boost = clampf(player.boost + boost_m * delta, 0.0, 1.0)
+	player.boost = 1.0
 
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
 		var v := planet.global_position - player.global_position
@@ -129,6 +131,14 @@ func physics_process_player(delta) -> void:
 		add_child(bullet)
 		bullet.color_circle.color = Player.COLOR
 
+	var damage_cooldown := get_ticks_sec() - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
+	if damage_cooldown:
+		if fmod(get_ticks_sec(), 0.2) < 0.1:
+			player.modulate.a = 0.3
+		else:
+			player.modulate.a = 1.0
+	else:
+		player.modulate.a = 1.0
 
 func physics_process_planets(delta: float) -> void:
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
@@ -163,7 +173,10 @@ func physics_process_enemy(delta: float) -> void:
 				enemy.last_fired_at = get_ticks_sec()
 				var bullet: Bullet = bullet_scene.instantiate()
 				bullet.position = enemy.position
-				var bullet_angle := enemy.position.angle_to_point(player.position) + (0.1 * sin(get_ticks_sec()) + 0.02 * randf_range(-1.0, 1.0)) * TAU
+				var player_angle := enemy.position.angle_to_point(player.position)
+				var spray := 0.05 * sin(get_ticks_sec()) * TAU
+				var spread := 0.02 * randf_range(-1.0, 1.0) * TAU
+				var bullet_angle := player_angle + spray + spread
 				enemy.rotation = bullet_angle
 				var bullet_dir := Vector2.from_angle(bullet_angle)
 				bullet.velocity = velocity + bullet_dir * BULLET_SPEED
@@ -260,7 +273,9 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
-	if body is Player and bullet.source == Bullet.Source.ENEMY:
+	var damage_cooldown := get_ticks_sec() - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
+	if body is Player and bullet.source == Bullet.Source.ENEMY and not damage_cooldown:
+		player.last_hit_at = get_ticks_sec()
 		player.health = maxf(player.health - ENEMY_DAMAGE, 0.0)
 		if player.health == 0.0:
 			player.alive = false
