@@ -105,3 +105,60 @@ offset_top = -40.0
 offset_right = 217.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_s6pjd")
+
+[node name="EnemyPlanetIndicator" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Text" type="Control" parent="CanvasLayer/EnemyPlanetIndicator"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 1280.0
+offset_top = 812.0
+offset_right = 1280.0
+offset_bottom = 812.0
+
+[node name="Label" type="Label" parent="CanvasLayer/EnemyPlanetIndicator/Text"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -155.5
+offset_top = -21.0
+offset_right = 155.5
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(2.08165e-12, 2.08165e-12)
+theme_override_font_sizes/font_size = 30
+text = "Enemy planet 1000 km"
+
+[node name="Arrow" type="Control" parent="CanvasLayer/EnemyPlanetIndicator"]
+anchors_preset = 0
+offset_left = 1661.0
+offset_top = 869.0
+offset_right = 1661.0
+offset_bottom = 869.0
+
+[node name="Label" type="Label" parent="CanvasLayer/EnemyPlanetIndicator/Arrow"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -11.5
+offset_top = -27.5
+offset_right = 11.5
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(11, 27)
+theme_override_font_sizes/font_size = 40
+text = ">"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,7 +1,8 @@
 class_name Level
 extends Node2D
 
-const BULLET_SPEED := 300.0
+const BULLET_LIFETIME = 6.0
+const BULLET_SPEED := 350.0
 const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
@@ -14,6 +15,10 @@ const ENEMY_DAMAGE := 0.05
 @onready var health_bar_fill: Panel = $CanvasLayer/Health/Fill
 @onready var boost_bar: Panel = $CanvasLayer/Boost
 @onready var boost_bar_fill: Panel = $CanvasLayer/Boost/Fill
+@onready var enemy_planet_indicator: Control = $CanvasLayer/EnemyPlanetIndicator
+@onready var enemy_planet_indicator_text: Control = $CanvasLayer/EnemyPlanetIndicator/Text
+@onready var enemy_planet_indicator_label: Label = $CanvasLayer/EnemyPlanetIndicator/Text/Label
+@onready var enemy_planet_indicator_arrow: Control = $CanvasLayer/EnemyPlanetIndicator/Arrow
 
 
 func _ready() -> void:
@@ -139,9 +144,7 @@ func physics_process_bullets(delta: float) -> void:
 			bullet.velocity += d * GRAVITY * planet.mass / (r ** 2.0) * delta
 
 		bullet.position += bullet.velocity * delta
-		var lifetime := 7.0
-
-		if get_ticks_sec() - bullet.created_at > lifetime:
+		if get_ticks_sec() - bullet.created_at > BULLET_LIFETIME:
 			bullet.queue_free()
 
 
@@ -155,15 +158,14 @@ func physics_process_enemy(delta: float) -> void:
 		var velocity := (enemy.position - last_position) / delta
 
 		if player.alive:
-			enemy.rotation = enemy.position.angle_to_point(player.position)
-
 			var fire_rate := 4.0
 			if get_ticks_sec() - enemy.last_fired_at >= 1.0 / fire_rate:
 				enemy.last_fired_at = get_ticks_sec()
 				var bullet: Bullet = bullet_scene.instantiate()
 				bullet.position = enemy.position
-				var bullet_rot := enemy.rotation + randf_range(-1.0, 1.0) * 0.3
-				var bullet_dir := Vector2.from_angle(bullet_rot)
+				var bullet_angle := enemy.position.angle_to_point(player.position) + (0.1 * sin(get_ticks_sec()) + 0.02 * randf_range(-1.0, 1.0)) * TAU
+				enemy.rotation = bullet_angle
+				var bullet_dir := Vector2.from_angle(bullet_angle)
 				bullet.velocity = velocity + bullet_dir * BULLET_SPEED
 				bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 				bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
@@ -180,6 +182,37 @@ func physics_process_ui() -> void:
 	else:
 		health_bar_fill.visible = false
 		boost_bar_fill.visible = false
+
+	var nearest_enemy_planet: Planet
+	for planet: Planet in get_tree().get_nodes_in_group("planets"):
+		if not planet.enemy:
+			continue
+		if not nearest_enemy_planet:
+			nearest_enemy_planet = planet
+			continue
+		var d1 := planet.global_position.distance_to(player.global_position)
+		var d2 := nearest_enemy_planet.global_position.distance_to(player.global_position)
+		if d1 < d2:
+			nearest_enemy_planet = planet
+
+	if nearest_enemy_planet:
+		enemy_planet_indicator.visible = true
+		var dir := player.global_position.direction_to(nearest_enemy_planet.global_position)
+		var ellipse_size := get_viewport_rect().size * Vector2(0.7, 0.8)
+		var theta := dir.angle()
+		var r := get_ellipse_r(theta, ellipse_size)
+		var viewport_center := get_viewport_rect().size / 2.0
+		enemy_planet_indicator_text.position = viewport_center + dir * r
+		var dist := player.global_position.distance_to(nearest_enemy_planet.global_position)
+		enemy_planet_indicator_label.text = "Enemy planet %s Mm" % round(dist / 1000.0)
+
+		var ellipse_2_size := enemy_planet_indicator_label.size * Vector2(1.2, 3.0)
+		var r_2 := get_ellipse_r(theta, ellipse_2_size)
+		var p := enemy_planet_indicator_text.position
+		enemy_planet_indicator_arrow.position = p + dir * r_2
+		enemy_planet_indicator_arrow.rotation = theta
+	else:
+		enemy_planet_indicator.visible = false
 
 
 func _input(event: InputEvent) -> void:
@@ -221,6 +254,7 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
 				planet_has_enemy = true
 		if not planet_has_enemy:
+			enemy.planet.enemy = false
 			enemy.planet.color_circle.color = PLANET_PLAYER_COLOR
 			enemy.planet.moon.color_circle.color = PLANET_PLAYER_COLOR
 
@@ -247,3 +281,9 @@ func on_moon_body_entered(body: Node2D) -> void:
 		player.alive = false
 		player.process_mode = Node.PROCESS_MODE_DISABLED
 
+
+# https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
+func get_ellipse_r(theta: float, size: Vector2) -> float:
+	var a := size.x / 2.0
+	var b := size.y / 2.0
+	return a * b / sqrt((b * cos(theta)) ** 2.0 + (a * sin(theta)) ** 2.0)
