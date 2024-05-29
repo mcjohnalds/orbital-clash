@@ -7,9 +7,12 @@ const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
 const ENEMY_DAMAGE := 0.17
+const PLANET_DAMAGE := 0.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
+const PLANET_BOUNCE_SPEED := 300.0
 @onready var player: Player = $Player
 @onready var bullet_scene := preload("res://bullet.tscn")
+@onready var planet_scene := preload("res://planet.tscn")
 @onready var moon_scene := preload("res://moon.tscn")
 @onready var enemy_scene := preload("res://enemy.tscn")
 @onready var health_bar: Panel = $CanvasLayer/Health
@@ -31,7 +34,7 @@ func _ready() -> void:
 
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
 		planet.color_circle.color = PLANET_ENEMY_COLOR
-		planet.body_entered.connect(on_planet_body_entered)
+		planet.body_entered.connect(on_planet_body_entered.bind(planet))
 
 		var min_r := 50.0
 		var max_r := 1500.0
@@ -41,7 +44,7 @@ func _ready() -> void:
 		moon.planet_theta = randf_range(0.0, TAU)
 		moon.planet_r = planet.circle.radius + randf_range(min_r, max_r)
 		moon.position = moon.planet.position + Vector2.from_angle(moon.planet_theta) * moon.planet_r
-		moon.body_entered.connect(on_moon_body_entered)
+		moon.body_entered.connect(on_planet_body_entered.bind(moon))
 		add_child(moon)
 		moon.color_circle.color = PLANET_ENEMY_COLOR
 		planet.moon = moon
@@ -273,28 +276,28 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
-	var damage_cooldown := get_ticks_sec() - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
-	if body is Player and bullet.source == Bullet.Source.ENEMY and not damage_cooldown:
-		player.last_hit_at = get_ticks_sec()
-		player.health = maxf(player.health - ENEMY_DAMAGE, 0.0)
-		if player.health == 0.0:
-			player.alive = false
-			player.process_mode = Node.PROCESS_MODE_DISABLED
+	if body is Player and bullet.source == Bullet.Source.ENEMY :
+		var damage_cooldown := get_ticks_sec() - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
+		if not damage_cooldown:
+			player.last_hit_at = get_ticks_sec()
+			player.health = maxf(player.health - ENEMY_DAMAGE, 0.0)
+			if player.health == 0.0:
+				player.alive = false
+				player.process_mode = Node.PROCESS_MODE_DISABLED
 		bullet.queue_free()
 
 
-func on_planet_body_entered(body: Node2D) -> void:
+func on_planet_body_entered(body: Node2D, planet: Node2D) -> void:
 	if body is Player:
-		player.health = 0.0
-		player.alive = false
-		player.process_mode = Node.PROCESS_MODE_DISABLED
-
-
-func on_moon_body_entered(body: Node2D) -> void:
-	if body is Player:
-		player.health = 0.0
-		player.alive = false
-		player.process_mode = Node.PROCESS_MODE_DISABLED
+		var damage_cooldown := get_ticks_sec() - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
+		if not damage_cooldown:
+			player.last_hit_at = get_ticks_sec()
+			player.health = maxf(player.health - PLANET_DAMAGE, 0.0)
+			if player.health == 0.0:
+				player.alive = false
+				player.process_mode = Node.PROCESS_MODE_DISABLED
+		var dir := planet.global_position.direction_to(player.global_position)
+		player.linear_velocity = dir * PLANET_BOUNCE_SPEED
 
 
 # https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
