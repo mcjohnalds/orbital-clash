@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://dcb6h8v8w85ue"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_7uwu3"]
+[ext_resource type="Texture2D" uid="uid://bxsl4ymimhl7n" path="res://seamless_space.png" id="1_il7fv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ubab"]
+draw_center = false
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[node name="Main" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_7uwu3")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.01, 0.01)
+motion_mirroring = Vector2(2048, 2048)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+modulate = Color(0.450648, 0.450648, 0.450648, 1)
+texture_repeat = 2
+scale = Vector2(2, 2)
+texture = ExtResource("1_il7fv")
+centered = false
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="StartButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = 77.5
+offset_right = 78.0
+offset_bottom = 142.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxFlat_5ubab")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5ubab")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5ubab")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5ubab")
+theme_override_styles/focus = SubResource("StyleBoxFlat_5ubab")
+text = "START"
+
+[node name="PlanetCapturedLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -219.5
+offset_top = -149.0
+offset_right = 219.5
+offset_bottom = -53.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 70
+text = "Orbital Clash"
+horizontal_alignment = 1
