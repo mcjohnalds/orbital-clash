@@ -14,7 +14,7 @@ const ENEMY_DAMAGE := 0.17
 const PLANET_DAMAGE := 0.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
-var planets_captured := 0
+var planets_captured := 4
 var planet_last_captured_at := -10000.0
 var current_time := 0.0
 @onready var player: Player = $Player
@@ -301,7 +301,7 @@ func _input(event: InputEvent) -> void:
 		z *= 0.8
 	if event.is_action("scroll_down"):
 		z *= 1.2
-	z = maxf(z, 0.001)
+	z = clampf(z, 0.1, 2.0)
 	player.camera.zoom = Vector2(z, z)
 
 	if event is InputEventKey:
