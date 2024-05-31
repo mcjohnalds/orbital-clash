@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0nli4j2k12vh"]
+[gd_scene load_steps=3 format=3 uid="uid://d0nli4j2k12vh"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_dh41o"]
+[ext_resource type="Texture2D" uid="uid://b6kcfrhca8ep3" path="res://player.png" id="2_7in78"]
 
 [node name="Player" type="RigidBody2D"]
 center_of_mass_mode = 1
@@ -9,13 +10,7 @@ script = ExtResource("1_dh41o")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2(-68, -80)
 scale = Vector2(2, 2)
-polygon = PackedVector2Array(2.08165e-12, 2.08165e-12, 2.08165e-12, 80, 69, 40)
-
-[node name="Polygon2D" type="Polygon2D" parent="."]
-position = Vector2(-68, -80)
-scale = Vector2(2, 2)
-color = Color(0.4402, 0.71, 0.68302, 1)
-polygon = PackedVector2Array(2.08165e-12, 2.08165e-12, 2.08165e-12, 80, 69, 40)
+polygon = PackedVector2Array(-4, -14, -4, 94, 81.5, 40)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
@@ -24,3 +19,8 @@ position = Vector2(-68, 2.08165e-12)
 scale = Vector2(1, 1.4)
 color = Color(0.7134, 0.87, 0.85434, 1)
 polygon = PackedVector2Array(2.08165e-12, -30, -259, 2.08165e-12, 2.08165e-12, 30)
+
+[node name="Player" type="Sprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.199244, 0.199244)
+texture = ExtResource("2_7in78")

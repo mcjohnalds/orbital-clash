@@ -1,0 +1,53 @@
+Todo:
+
+- Tutorial
+- Better end screen
+- Planet graphics - random
+- Sound
+  - Music
+  - Boost
+  - Player shoot
+  - Player hit
+  - Player destroyed
+  - Player crash
+  - Enemy shoot
+  - Enemy destroyed
+  - Planet captured
+  - Button press
+  - Collect pickup
+- Particle effects
+  - Boost
+  - Player shoot
+  - Enemy shoot
+  - Player hit
+  - Player crash
+  - Enemy destroyed
+  - Planet captured
+  - Pickup idle
+  - Pickup collected
+  - Bullet disappear
+- Fix planet and nebula colors
+- Animate start screen
+- Settings
+- Export
+  - Web
+  - Windows
+  - Mac
+  - Linux
+- Create jam page
+- Test
+  - Web
+  - Windows
+  - Mac
+  - Linux
+- Submit to jam
+
+Ideas:
+
+- Custom loading screen
+- Different music at different times
+- Random space ambient noises
+- Change nebula color depending on distance to player/enemy planet
+- Make start menu more interesting
+- Play glitch effect or something when player is hit
+- Apply screen effect depending on player health

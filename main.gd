@@ -1,5 +1,3 @@
-# TODO: change texture color depending on distance to player/enemy planet
-# TODO: save proc textures in file
 @tool
 class_name Main
 extends Node2D
@@ -11,6 +9,22 @@ var level: Level
 @onready var level_node: Node2D = $Level
 var stars_multiply: FastNoiseLite = preload("res://stars_multiply.tres")
 var last_stars_multiply_update_time := -1000.0
+
+const ENEMY_COLORS: Array[Color] = [
+	Color("A570B5"),
+	Color("8E70B5"),
+	Color("B570A9"),
+	Color("7870B5"),
+	Color("B57080")
+]
+
+const PLAYER_COLORS: Array[Color] = [
+	Color("70AAB5"),
+	Color("70B5AA"),
+	Color("7094B5"),
+	Color("70B593"),
+	Color("707EB5")
+]
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
