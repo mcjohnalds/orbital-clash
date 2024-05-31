@@ -1,6 +1,7 @@
 Todo:
 
-- Better end screen
+- Kill player if out of fuel
+- Add restart button to pause menu
 - Planet graphics - random
 - Bullet graphic
 - Better font

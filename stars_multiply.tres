@@ -4,5 +4,5 @@
 noise_type = 2
 seed = 38
 frequency = 0.0356
-offset = Vector3(121243, 0, 0)
+offset = Vector3(121621, 0, 0)
 fractal_type = 0

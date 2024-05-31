@@ -48,18 +48,25 @@ script = ExtResource("1_br7jx")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Health" type="Panel" parent="CanvasLayer"]
+[node name="Bars" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Health" type="Panel" parent="CanvasLayer/Bars"]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 81.0
-offset_top = -48.0
+offset_top = 992.0
 offset_right = 298.0
-offset_bottom = -8.0
+offset_bottom = 1032.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
 
-[node name="Fill" type="Panel" parent="CanvasLayer/Health"]
+[node name="Fill" type="Panel" parent="CanvasLayer/Bars/Health"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -69,44 +76,47 @@ offset_right = 217.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_m6q34")
 
-[node name="BoostLabel" type="Label" parent="CanvasLayer"]
+[node name="BoostLabel" type="Label" parent="CanvasLayer/Bars"]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
-offset_top = -98.0
+offset_top = 942.0
 offset_right = 70.0
-offset_bottom = -58.0
+offset_bottom = 982.0
 grow_vertical = 0
 text = "FUEL"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="HealthLabel" type="Label" parent="CanvasLayer"]
+[node name="HealthLabel" type="Label" parent="CanvasLayer/Bars"]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
-offset_top = -48.0
+offset_top = 992.0
 offset_right = 72.0
-offset_bottom = -8.0
+offset_bottom = 1032.0
 grow_vertical = 0
 text = "HEALTH"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Boost" type="Panel" parent="CanvasLayer"]
+[node name="Boost" type="Panel" parent="CanvasLayer/Bars"]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 81.0
-offset_top = -98.0
+offset_top = 942.0
 offset_right = 298.0
-offset_bottom = -58.0
+offset_bottom = 982.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
 
-[node name="Fill" type="Panel" parent="CanvasLayer/Boost"]
+[node name="Fill" type="Panel" parent="CanvasLayer/Bars/Boost"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -117,6 +127,7 @@ grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_s6pjd")
 
 [node name="EnemyPlanetIndicator" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -145,7 +156,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(2.08165e-12, 2.08165e-12)
 theme_override_font_sizes/font_size = 30
-text = "Enemy planet 1000 km"
+text = "ENEMY PLANET 1000 km"
 
 [node name="Arrow" type="Control" parent="CanvasLayer/EnemyPlanetIndicator"]
 anchors_preset = 0
@@ -173,7 +184,8 @@ text = ">"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlanetsCapturedLabel" type="Label" parent="CanvasLayer"]
+[node name="PlanetsCapturedLabelBottomRight" type="Label" parent="CanvasLayer"]
+visible = false
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -189,7 +201,44 @@ theme_override_font_sizes/font_size = 30
 text = "PLANETS CAPTURED: 10"
 horizontal_alignment = 2
 
+[node name="PlanetsCapturedLabelCenter" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -284.5
+offset_top = -34.5
+offset_right = 284.5
+offset_bottom = 34.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+text = "PLANETS CAPTURED: 10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -284.5
+offset_top = -134.5
+offset_right = 284.5
+offset_bottom = -65.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PlanetCapturedLabel" type="Label" parent="CanvasLayer"]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -202,7 +251,7 @@ offset_bottom = -65.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 35
-text = "Planet Captured"
+text = "PLANET CAPTURED"
 horizontal_alignment = 1
 
 [node name="SpeedUpButton" type="Button" parent="CanvasLayer"]
@@ -247,9 +296,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -78.0
-offset_top = -32.5
+offset_top = 77.5
 offset_right = 78.0
-offset_bottom = 32.5
+offset_bottom = 142.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)

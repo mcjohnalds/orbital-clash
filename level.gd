@@ -4,7 +4,6 @@ extends Node2D
 const MIN_ORBIT_DISTANCE := 50.0
 const MAX_ORBIT_DISTANCE := 1500.0
 const ENEMY_FIRE_RATE := 2.0
-const PLANET_CAPTURED_MESSAGE_DURATION := 2.0
 const HEALTH_PICKUP_AMOUNT := 0.2
 const FUEL_PICKUP_AMOUNT := 1.0
 const BULLET_LIFETIME = 6.0
@@ -13,11 +12,10 @@ const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
 const ENEMY_DAMAGE := 0.17
-const PLANET_DAMAGE := 0.17
+const PLANET_DAMAGE := 1.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
 var planets_captured := 0
-var planet_last_captured_at := -10000.0
 var current_time := 0.0
 @onready var player: Player = $Player
 @onready var bullet_scene := preload("res://bullet.tscn")
@@ -26,21 +24,24 @@ var current_time := 0.0
 @onready var health_scene := preload("res://health.tscn")
 @onready var moon_scene := preload("res://moon.tscn")
 @onready var enemy_scene := preload("res://enemy.tscn")
-@onready var health_bar: Panel = $CanvasLayer/Health
-@onready var health_bar_fill: Panel = $CanvasLayer/Health/Fill
-@onready var boost_bar: Panel = $CanvasLayer/Boost
-@onready var boost_bar_fill: Panel = $CanvasLayer/Boost/Fill
+@onready var bars: Control = $CanvasLayer/Bars
+@onready var health_bar: Panel = $CanvasLayer/Bars/Health
+@onready var health_bar_fill: Panel = $CanvasLayer/Bars/Health/Fill
+@onready var boost_bar: Panel = $CanvasLayer/Bars/Boost
+@onready var boost_bar_fill: Panel = $CanvasLayer/Bars/Boost/Fill
 @onready var enemy_planet_indicator: Control = $CanvasLayer/EnemyPlanetIndicator
 @onready var enemy_planet_indicator_text: Control = $CanvasLayer/EnemyPlanetIndicator/Text
 @onready var enemy_planet_indicator_label: Label = $CanvasLayer/EnemyPlanetIndicator/Text/Label
 @onready var enemy_planet_indicator_arrow: Control = $CanvasLayer/EnemyPlanetIndicator/Arrow
-@onready var planets_captured_label: Label = $CanvasLayer/PlanetsCapturedLabel
+@onready var planets_captured_label_bottom_right: Label = $CanvasLayer/PlanetsCapturedLabelBottomRight
+@onready var planets_captured_label_center: Label = $CanvasLayer/PlanetsCapturedLabelCenter
 @onready var planet_captured_label: Label = $CanvasLayer/PlanetCapturedLabel
 @onready var speed_up_button: Button = $CanvasLayer/SpeedUpButton
 @onready var pause_button: Button = $CanvasLayer/PauseButton
 @onready var paused_control: Control = $CanvasLayer/Paused
 @onready var play_button: Button = $CanvasLayer/Paused/PlayButton
 @onready var restart_button: Button = $CanvasLayer/RestartButton
+@onready var game_over_label: Label = $CanvasLayer/GameOverLabel
 
 
 func _ready() -> void:
@@ -219,12 +220,8 @@ func physics_process_enemy(delta: float) -> void:
 
 
 func physics_process_ui() -> void:
-	if player.alive:
-		health_bar_fill.size.x = health_bar.size.x * player.health
-		boost_bar_fill.size.x = boost_bar.size.x * player.boost
-	else:
-		health_bar_fill.visible = false
-		boost_bar_fill.visible = false
+	health_bar_fill.size.x = health_bar.size.x * player.health
+	boost_bar_fill.size.x = boost_bar.size.x * player.boost
 
 	var nearest_enemy_planet: Planet
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
@@ -239,7 +236,6 @@ func physics_process_ui() -> void:
 			nearest_enemy_planet = planet
 
 	if nearest_enemy_planet:
-		enemy_planet_indicator.visible = true
 		var dir := player.global_position.direction_to(nearest_enemy_planet.global_position)
 		var ellipse_size := get_viewport_rect().size * Vector2(0.7, 0.8)
 		var theta := dir.angle()
@@ -247,26 +243,13 @@ func physics_process_ui() -> void:
 		var viewport_center := get_viewport_rect().size / 2.0
 		enemy_planet_indicator_text.position = viewport_center + dir * r
 		var dist := player.global_position.distance_to(nearest_enemy_planet.global_position)
-		enemy_planet_indicator_label.text = "Enemy planet %s Mm" % round(dist / 1000.0)
+		enemy_planet_indicator_label.text = "ENEMY PLANET %s Mm" % round(dist / 1000.0)
 
 		var ellipse_2_size := enemy_planet_indicator_label.size * Vector2(1.2, 3.0)
 		var r_2 := get_ellipse_r(theta, ellipse_2_size)
 		var p := enemy_planet_indicator_text.position
 		enemy_planet_indicator_arrow.position = p + dir * r_2
 		enemy_planet_indicator_arrow.rotation = theta
-	else:
-		enemy_planet_indicator.visible = false
-
-	if planets_captured > 0:
-		planets_captured_label.text = "PLANETS CAPTURED: %s" % planets_captured
-		planets_captured_label.visible = true
-	else:
-		planets_captured_label.visible = false
-
-	if current_time - planet_last_captured_at < PLANET_CAPTURED_MESSAGE_DURATION:
-		planet_captured_label.visible = true
-	else:
-		planet_captured_label.visible = false
 
 	if speed_up_button.button_pressed:
 		Engine.time_scale = 10.0
@@ -310,8 +293,15 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			if enemy.planet.moon:
 				enemy.planet.moon.color_circle.color = PLANET_PLAYER_COLOR
 			planets_captured += 1
-			planet_last_captured_at = current_time
-			get_tree().create_timer(PLANET_CAPTURED_MESSAGE_DURATION + 0.4).timeout.connect(create_enemy_planet)
+			planet_captured_label.visible = true
+			enemy_planet_indicator.visible = false
+			planets_captured_label_bottom_right.text = "PLANETS CAPTURED: %s" % planets_captured
+			planets_captured_label_bottom_right.visible = true
+			get_tree().create_timer(2.0).timeout.connect(func() -> void:
+				create_enemy_planet()
+				planet_captured_label.visible = false
+				enemy_planet_indicator.visible = true
+			)
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
@@ -340,10 +330,19 @@ func on_planet_body_entered(body: Node2D, planet: Node2D) -> void:
 func kill_player() -> void:
 	player.alive = false
 	player.process_mode = Node.PROCESS_MODE_DISABLED
-	get_tree().create_timer(3.0).timeout.connect(func() -> void:
+	planets_captured_label_bottom_right.visible = false
+	planet_captured_label.visible = false
+	player.health = 0.0
+	player.boost = 0.0
+	get_tree().create_timer(2.0).timeout.connect(func() -> void:
+		pause_button.visible = false
+		speed_up_button.visible = false
+		bars.visible = false
+		game_over_label.visible = true
 		restart_button.visible = true
+		planets_captured_label_center.text = "PLANETS CAPTURED: %s" % planets_captured
+		planets_captured_label_center.visible = true
 	)
-
 
 # https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
 func get_ellipse_r(theta: float, size: Vector2) -> float:
