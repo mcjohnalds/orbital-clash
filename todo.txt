@@ -1,6 +1,5 @@
 Todo:
 
-- Moon graphics
 - Bullet graphic
 - Better font
 - Sound

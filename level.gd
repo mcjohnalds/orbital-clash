@@ -55,7 +55,7 @@ var planet_textures: Array[Texture2D] = [
 
 func _ready() -> void:
 	var start_planet := create_planet()
-	make_planet_player(start_planet)
+	set_planet_color_to_player(start_planet)
 
 	var player_planet_r := start_planet.circle.radius + 1000.0
 	player.global_position = start_planet.global_position + Vector2(player_planet_r, 0.0)
@@ -86,13 +86,12 @@ func create_planet() -> Planet:
 
 	if planets_captured > 2:
 		var moon: Moon = moon_scene.instantiate()
+		add_child(moon)
 		moon.planet = planet
 		moon.planet_theta = randf_range(0.0, TAU)
-		moon.planet_r = planet.circle.radius + randf_range(MIN_ORBIT_DISTANCE, MAX_ORBIT_DISTANCE)
+		moon.planet_r = planet.circle.radius + moon.circle.radius + randf_range(MIN_ORBIT_DISTANCE, MAX_ORBIT_DISTANCE)
 		moon.position = moon.planet.position + Vector2.from_angle(moon.planet_theta) * moon.planet_r
 		moon.body_entered.connect(on_planet_body_entered.bind(moon))
-		add_child(moon)
-		moon.color_circle.color = PLANET_ENEMY_COLOR
 		planet.moon = moon
 
 	return planet
@@ -273,7 +272,7 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
 				planet_has_enemy = true
 		if player.alive and not planet_has_enemy:
-			make_planet_player(enemy.planet)
+			set_planet_color_to_player(enemy.planet)
 			planets_captured += 1
 			planet_captured_label.visible = true
 			enemy_planet_indicator.visible = false
@@ -370,13 +369,15 @@ func on_pause_menu_restart_button_down() -> void:
 		pause_menu_restart_button.text = "REALLY?"
 
 
-func make_planet_player(planet: Planet) -> void:
+func set_planet_color_to_player(planet: Planet) -> void:
 	var sprite: Sprite2D = planet.get_node("Sprite2D")
 	var shader: ShaderMaterial = sprite.material
 	shader.set_shader_parameter("shiftHue", -0.26)
 	planet.enemy = false
 	if planet.moon:
-		planet.moon.color_circle.color = PLANET_PLAYER_COLOR
+		var m_sprite: Sprite2D = planet.moon.get_node("Sprite2D")
+		var m_shader: ShaderMaterial = m_sprite.material
+		m_shader.set_shader_parameter("shiftHue", -0.26)
 
 
 func update_enemy_planet_indicator() -> void:

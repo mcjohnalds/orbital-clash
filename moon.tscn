@@ -1,10 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3pq3g8ukj4wn"]
+[gd_scene load_steps=6 format=3 uid="uid://c3pq3g8ukj4wn"]
 
 [ext_resource type="Script" path="res://moon.gd" id="1_njxme"]
-[ext_resource type="PackedScene" uid="uid://b71k2i5e2eun5" path="res://color_circle.tscn" id="2_t3k7j"]
+[ext_resource type="Texture2D" uid="uid://b0jli67o003kt" path="res://moon.png" id="2_amv4u"]
+[ext_resource type="Shader" path="res://hue_shift.gdshader" id="2_skt8d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jp1h1"]
 radius = 200.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vt7uq"]
+resource_local_to_scene = true
+shader = ExtResource("2_skt8d")
+shader_parameter/shiftHue = 2.08165e-12
 
 [node name="Moon" type="Area2D"]
 script = ExtResource("1_njxme")
@@ -12,16 +18,7 @@ script = ExtResource("1_njxme")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_jp1h1")
 
-[node name="ColorCircle" parent="." instance=ExtResource("2_t3k7j")]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -200.0
-offset_right = 200.0
-offset_bottom = 200.0
-grow_horizontal = 2
-grow_vertical = 2
-radius = 200.0
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_vt7uq")
+scale = Vector2(0.39, 0.39)
+texture = ExtResource("2_amv4u")
