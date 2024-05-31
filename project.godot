@@ -44,8 +44,3 @@ scroll_down={
 2d/default_gravity=2.08165e-12
 2d/default_linear_damp=2.08167e-17
 2d/default_angular_damp=2.08167e-17
-
-[rendering]
-
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"

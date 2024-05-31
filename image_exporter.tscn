@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbsboidg8rolm"]
+
+[ext_resource type="Script" path="res://image_exporter.gd" id="1_c1u0k"]
+
+[node name="ImageExporter" type="Node"]
+script = ExtResource("1_c1u0k")

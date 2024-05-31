@@ -1,22 +1,14 @@
-[gd_scene load_steps=22 format=3 uid="uid://dcb6h8v8w85ue"]
+[gd_scene load_steps=18 format=3 uid="uid://dcb6h8v8w85ue"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_7uwu3"]
 [ext_resource type="FastNoiseLite" uid="uid://dia22a8lowhlf" path="res://stars_multiply.tres" id="2_dhgmw"]
+[ext_resource type="Texture2D" uid="uid://egt1xh1va2wy" path="res://stars.png" id="2_klhy2"]
 [ext_resource type="Shader" path="res://barrel.gdshader" id="3_ufqta"]
-
-[sub_resource type="Gradient" id="Gradient_mxh2a"]
-offsets = PackedFloat32Array(0.74026, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_85f52"]
-noise_type = 2
-frequency = 0.1352
-fractal_type = 0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1dfhe"]
-width = 1024
-height = 1024
-color_ramp = SubResource("Gradient_mxh2a")
-noise = SubResource("FastNoiseLite_85f52")
+[ext_resource type="Texture2D" uid="uid://tg1he66tie5i" path="res://nebula_1.png" id="4_vylts"]
+[ext_resource type="Texture2D" uid="uid://bv2jtey1xh80d" path="res://nebula_2.png" id="5_4oufm"]
+[ext_resource type="Texture2D" uid="uid://cba0dpiehwt33" path="res://nebula_3.png" id="6_vh1sl"]
+[ext_resource type="Shader" path="res://film_grain.gdshader" id="7_hxq4f"]
+[ext_resource type="Shader" path="res://glitch.gdshader" id="9_5k37l"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k6oio"]
 blend_mode = 3
@@ -33,69 +25,6 @@ noise = ExtResource("2_dhgmw")
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_8vcyj"]
 blend_mode = 1
 
-[sub_resource type="Gradient" id="Gradient_e3v7b"]
-offsets = PackedFloat32Array(0, 0.52381)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_a6xsd"]
-seed = 1
-frequency = 0.0006
-fractal_lacunarity = 2.68
-fractal_gain = 0.61
-domain_warp_enabled = true
-domain_warp_amplitude = 23.89
-domain_warp_frequency = 0.12
-domain_warp_fractal_type = 2
-domain_warp_fractal_octaves = 1
-domain_warp_fractal_lacunarity = 0.71
-domain_warp_fractal_gain = -4.55
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_rb2vr"]
-width = 5120
-height = 5120
-seamless = true
-color_ramp = SubResource("Gradient_e3v7b")
-noise = SubResource("FastNoiseLite_a6xsd")
-
-[sub_resource type="Gradient" id="Gradient_w1hla"]
-offsets = PackedFloat32Array(0.593074, 1)
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_snpgv"]
-frequency = 0.002
-domain_warp_enabled = true
-domain_warp_amplitude = 7.51
-domain_warp_frequency = 0.59
-domain_warp_fractal_octaves = 10
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_chglw"]
-width = 2000
-height = 2000
-seamless = true
-color_ramp = SubResource("Gradient_w1hla")
-noise = SubResource("FastNoiseLite_snpgv")
-
-[sub_resource type="Gradient" id="Gradient_oxsuv"]
-offsets = PackedFloat32Array(0.692641, 1)
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_vlofg"]
-noise_type = 2
-frequency = 0.002
-fractal_octaves = 6
-fractal_lacunarity = 2.36
-fractal_gain = 0.45
-fractal_weighted_strength = 0.3
-cellular_jitter = 0.95
-domain_warp_enabled = true
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h2mcp"]
-width = 2000
-height = 2000
-seamless = true
-color_ramp = SubResource("Gradient_oxsuv")
-noise = SubResource("FastNoiseLite_vlofg")
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ubab"]
 draw_center = false
 border_width_left = 5
@@ -106,8 +35,36 @@ border_color = Color(1, 1, 1, 1)
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_em2gu"]
+shader = ExtResource("7_hxq4f")
+shader_parameter/amount = 0.05
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l1aja"]
 shader = ExtResource("3_ufqta")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k3dun"]
+shader = ExtResource("9_5k37l")
+shader_parameter/overlay = false
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.21
+shader_parameter/grille_opacity = 0.01
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/pixelate = true
+shader_parameter/roll = true
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.002
+shader_parameter/noise_opacity = 0.02
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.022
+shader_parameter/aberration = 0.00100005
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = -0.36
+shader_parameter/vignette_opacity = 0.259
 
 [node name="Main" type="Node2D"]
 process_mode = 3
@@ -116,57 +73,46 @@ script = ExtResource("1_7uwu3")
 [node name="ParallaxBackground1" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground1"]
 motion_scale = Vector2(0.01, 0.01)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="Stars" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer"]
+[node name="Stars" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer1"]
 offset_right = 5120.0
 offset_bottom = 5120.0
-texture = SubResource("NoiseTexture2D_1dfhe")
+texture = ExtResource("2_klhy2")
 stretch_mode = 1
 
-[node name="Multiply" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer"]
+[node name="Multiply" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer1"]
 material = SubResource("CanvasItemMaterial_k6oio")
 offset_right = 5120.0
 offset_bottom = 5120.0
 texture = SubResource("NoiseTexture2D_5vam5")
 stretch_mode = 1
 
-[node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground1"]
 motion_scale = Vector2(0.05, 0.05)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="TextureRect" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer4"]
+[node name="Nebula1" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer2"]
 modulate = Color(0.670588, 0.466667, 0.733333, 0.105882)
 material = SubResource("CanvasItemMaterial_8vcyj")
 offset_right = 5120.0
 offset_bottom = 5120.0
-texture = SubResource("NoiseTexture2D_rb2vr")
+texture = ExtResource("4_vylts")
 stretch_mode = 1
 
-[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground1"]
 motion_scale = Vector2(0.1, 0.1)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="TextureRect" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer2"]
+[node name="Nebula2" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer3"]
 modulate = Color(0.647059, 0.439216, 0.709804, 0.439216)
 material = SubResource("CanvasItemMaterial_8vcyj")
 offset_right = 5120.0
 offset_bottom = 5120.0
-texture = SubResource("NoiseTexture2D_chglw")
+texture = ExtResource("5_4oufm")
 stretch_mode = 1
-
-[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground1"]
-motion_scale = Vector2(0.2, 0.2)
-motion_mirroring = Vector2(5120, 5120)
-
-[node name="TextureRect2" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer3"]
-modulate = Color(0.647059, 0.439216, 0.709804, 0.470588)
-material = SubResource("CanvasItemMaterial_8vcyj")
-offset_right = 5120.0
-offset_bottom = 5120.0
-texture = SubResource("NoiseTexture2D_h2mcp")
 
 [node name="Level" type="Node2D" parent="."]
 
@@ -213,10 +159,49 @@ text = "Orbital Clash"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="PostProcessing" type="CanvasLayer" parent="."]
+[node name="ParallaxBackground2" type="ParallaxBackground" parent="."]
+layer = 0
+scroll_ignore_camera_zoom = true
 
-[node name="Barrel" type="ColorRect" parent="PostProcessing"]
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground2"]
+motion_scale = Vector2(0.2, 0.2)
+motion_mirroring = Vector2(5120, 5120)
+
+[node name="Nebula3" type="TextureRect" parent="ParallaxBackground2/ParallaxLayer"]
+modulate = Color(0.647059, 0.439216, 0.709804, 0.470588)
+material = SubResource("CanvasItemMaterial_8vcyj")
+offset_right = 5120.0
+offset_bottom = 5120.0
+mouse_filter = 2
+texture = ExtResource("6_vh1sl")
+
+[node name="FilmGrain" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="FilmGrain"]
+material = SubResource("ShaderMaterial_em2gu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Barrel" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Barrel"]
 material = SubResource("ShaderMaterial_l1aja")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Barrel2" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Barrel2"]
+material = SubResource("ShaderMaterial_k3dun")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
