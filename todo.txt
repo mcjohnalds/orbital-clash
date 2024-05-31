@@ -1,6 +1,5 @@
 Todo:
 
-- Add restart button to pause menu
 - Planet graphics - random
 - Bullet graphic
 - Better font

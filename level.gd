@@ -17,6 +17,7 @@ const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
 var planets_captured := 0
 var current_time := 0.0
+var confirm_restart := false
 @onready var player: Player = $Player
 @onready var bullet_scene := preload("res://bullet.tscn")
 @onready var planet_scene := preload("res://planet.tscn")
@@ -42,6 +43,7 @@ var current_time := 0.0
 @onready var play_button: Button = $CanvasLayer/Paused/PlayButton
 @onready var restart_button: Button = $CanvasLayer/RestartButton
 @onready var game_over_label: Label = $CanvasLayer/GameOverLabel
+@onready var pause_menu_restart_button: Button = $CanvasLayer/Paused/RestartButton
 
 
 func _ready() -> void:
@@ -56,6 +58,7 @@ func _ready() -> void:
 	pause_button.button_down.connect(on_pause_button_down)
 	play_button.button_down.connect(on_play_button_down)
 	restart_button.button_down.connect(on_restart_button_down)
+	pause_menu_restart_button.button_down.connect(on_pause_menu_restart_button_down)
 
 	get_tree().create_timer(3.0).timeout.connect(create_enemy_planet)
 
@@ -370,7 +373,19 @@ func on_pause_button_down() -> void:
 func on_play_button_down() -> void:
 	get_tree().paused = false
 	paused_control.visible = false
+	confirm_restart = false
+	pause_menu_restart_button.text = "RESTART"
 
 
 func on_restart_button_down() -> void:
+	get_tree().paused = false
 	get_tree().reload_current_scene()
+
+
+func on_pause_menu_restart_button_down() -> void:
+	if confirm_restart:
+		get_tree().paused = false
+		get_tree().reload_current_scene()
+	else:
+		confirm_restart = true
+		pause_menu_restart_button.text = "REALLY?"
