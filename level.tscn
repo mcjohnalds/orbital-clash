@@ -52,9 +52,9 @@ script = ExtResource("1_br7jx")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
+offset_left = 81.0
 offset_top = -48.0
-offset_right = 228.0
+offset_right = 298.0
 offset_bottom = -8.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
@@ -69,13 +69,39 @@ offset_right = 217.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_m6q34")
 
+[node name="BoostLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -98.0
+offset_right = 70.0
+offset_bottom = -58.0
+grow_vertical = 0
+text = "FUEL"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HealthLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -48.0
+offset_right = 72.0
+offset_bottom = -8.0
+grow_vertical = 0
+text = "HEALTH"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="Boost" type="Panel" parent="CanvasLayer"]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
+offset_left = 81.0
 offset_top = -98.0
-offset_right = 228.0
+offset_right = 298.0
 offset_bottom = -58.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_83cng")
@@ -160,7 +186,7 @@ offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 30
-text = "Planets captured: 10"
+text = "PLANETS CAPTURED: 10"
 horizontal_alignment = 2
 
 [node name="PlanetCapturedLabel" type="Label" parent="CanvasLayer"]
@@ -170,9 +196,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -147.5
-offset_top = -124.5
+offset_top = -114.5
 offset_right = 147.5
-offset_bottom = -75.5
+offset_bottom = -65.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 35
@@ -196,7 +222,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/focus = SubResource("StyleBoxFlat_07d74")
-text = ">>"
+text = "FAST FORWARD"
 
 [node name="PauseButton" type="Button" parent="CanvasLayer"]
 offset_left = 20.0
@@ -211,7 +237,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/focus = SubResource("StyleBoxFlat_07d74")
-text = "||"
+text = "PAUSE"
 
 [node name="RestartButton" type="Button" parent="CanvasLayer"]
 visible = false
@@ -256,11 +282,18 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_y6t5e")
 
 [node name="PlayButton" type="Button" parent="CanvasLayer/Paused"]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 10.0
-offset_right = 76.0
-offset_bottom = 75.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.5
+offset_top = 7.5
+offset_right = 74.5
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 35
@@ -269,7 +302,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_07d74")
 theme_override_styles/focus = SubResource("StyleBoxFlat_07d74")
-text = ">"
+text = "RESUME"
 
 [node name="Label" type="Label" parent="CanvasLayer/Paused"]
 layout_mode = 1
@@ -279,9 +312,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -147.5
-offset_top = -24.5
+offset_top = -74.5
 offset_right = 147.5
-offset_bottom = 24.5
+offset_bottom = -25.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 35

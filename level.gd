@@ -56,7 +56,7 @@ func _ready() -> void:
 	play_button.button_down.connect(on_play_button_down)
 	restart_button.button_down.connect(on_restart_button_down)
 
-	create_enemy_planet()
+	get_tree().create_timer(3.0).timeout.connect(create_enemy_planet)
 
 
 func create_planet() -> Planet:
@@ -285,7 +285,7 @@ func physics_process_ui() -> void:
 		enemy_planet_indicator.visible = false
 
 	if planets_captured > 0:
-		planets_captured_label.text = "Planets captured: %s" % planets_captured
+		planets_captured_label.text = "PLANETS CAPTURED: %s" % planets_captured
 		planets_captured_label.visible = true
 	else:
 		planets_captured_label.visible = false
@@ -398,13 +398,11 @@ func on_pickup_body_entered(body: RigidBody2D, pickup: Variant):
 
 func on_pause_button_down() -> void:
 	get_tree().paused = true
-	pause_button.visible = false
 	paused_control.visible = true
 
 
 func on_play_button_down() -> void:
 	get_tree().paused = false
-	pause_button.visible = true
 	paused_control.visible = false
 
 

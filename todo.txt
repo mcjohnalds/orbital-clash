@@ -1,6 +1,6 @@
 Todo:
 
-- Tutorial
+- Touchpad scroll
 - Better end screen
 - Planet graphics - random
 - Bullet graphic
@@ -56,3 +56,9 @@ Ideas:
 - Apply screen effect depending on player health
 - Sound volume depends on zoom level
 - Make enemy planet indicator work better when planet is on screen
+- Distant galaxies parallax layer
+- Add voiceover
+- Smooth enemy rotation
+- Smooth zoom
+- Camera pan acceleration
+- Make HUD pretty

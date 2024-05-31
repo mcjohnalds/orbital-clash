@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dcb6h8v8w85ue"]
+[gd_scene load_steps=20 format=3 uid="uid://dcb6h8v8w85ue"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_7uwu3"]
 [ext_resource type="FastNoiseLite" uid="uid://dia22a8lowhlf" path="res://stars_multiply.tres" id="2_dhgmw"]
@@ -6,8 +6,10 @@
 [ext_resource type="Shader" path="res://barrel.gdshader" id="3_ufqta"]
 [ext_resource type="Texture2D" uid="uid://tg1he66tie5i" path="res://nebula_1.png" id="4_vylts"]
 [ext_resource type="Texture2D" uid="uid://bv2jtey1xh80d" path="res://nebula_2.png" id="5_4oufm"]
+[ext_resource type="Texture2D" uid="uid://oiv7wgnvqoc1" path="res://mouse_left.png" id="6_7s5wk"]
 [ext_resource type="Texture2D" uid="uid://cba0dpiehwt33" path="res://nebula_3.png" id="6_vh1sl"]
 [ext_resource type="Shader" path="res://film_grain.gdshader" id="7_hxq4f"]
+[ext_resource type="Texture2D" uid="uid://b5xpituog24b4" path="res://mouse_middle.png" id="7_jhojc"]
 [ext_resource type="Shader" path="res://glitch.gdshader" id="9_5k37l"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k6oio"]
@@ -125,9 +127,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -78.0
-offset_top = 77.5
+offset_top = 317.5
 offset_right = 78.0
-offset_bottom = 142.5
+offset_bottom = 382.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -148,9 +150,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -219.5
-offset_top = -149.0
+offset_top = -379.0
 offset_right = 219.5
-offset_bottom = -53.0
+offset_bottom = -283.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(2, 2, 2, 1)
@@ -158,6 +160,82 @@ theme_override_font_sizes/font_size = 70
 text = "Orbital Clash"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
+
+[node name="GridContainer" type="GridContainer" parent="Menu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -356.0
+offset_top = -199.0
+offset_right = 356.0
+offset_bottom = 259.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 2
+
+[node name="MouseLeft" type="TextureRect" parent="Menu/GridContainer"]
+custom_minimum_size = Vector2(400, 354)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("6_7s5wk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MouseMiddle" type="TextureRect" parent="Menu/GridContainer"]
+custom_minimum_size = Vector2(400, 354)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("7_jhojc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control3" type="Control" parent="Menu/GridContainer"]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Menu/GridContainer/Control3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -177.0
+offset_top = -100.0
+offset_right = 177.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "BOOST"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control4" type="Control" parent="Menu/GridContainer"]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Menu/GridContainer/Control4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -177.0
+offset_top = -100.0
+offset_right = 177.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "ZOOM"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ParallaxBackground2" type="ParallaxBackground" parent="."]
 layer = 0
