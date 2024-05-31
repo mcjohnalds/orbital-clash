@@ -3,6 +3,8 @@ Todo:
 - Tutorial
 - Better end screen
 - Planet graphics - random
+- Bullet graphic
+- Better font
 - Sound
   - Music
   - Boost
@@ -29,6 +31,7 @@ Todo:
 - Fix planet and nebula colors
 - Animate start screen
 - Settings
+- Game balance
 - Export
   - Web
   - Windows
@@ -51,3 +54,5 @@ Ideas:
 - Make start menu more interesting
 - Play glitch effect or something when player is hit
 - Apply screen effect depending on player health
+- Sound volume depends on zoom level
+- Make enemy planet indicator work better when planet is on screen

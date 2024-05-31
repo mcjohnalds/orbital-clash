@@ -26,6 +26,7 @@ const PLAYER_COLORS: Array[Color] = [
 	Color("707EB5")
 ]
 
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return

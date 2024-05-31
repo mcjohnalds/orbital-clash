@@ -1,6 +1,8 @@
 class_name Level
 extends Node2D
 
+const MIN_ORBIT_DISTANCE := 50.0
+const MAX_ORBIT_DISTANCE := 1500.0
 const ENEMY_FIRE_RATE := 2.0
 const PLANET_CAPTURED_MESSAGE_DURATION := 2.0
 const HEALTH_PICKUP_AMOUNT := 0.2
@@ -14,7 +16,7 @@ const ENEMY_DAMAGE := 0.17
 const PLANET_DAMAGE := 0.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
-var planets_captured := 4
+var planets_captured := 0
 var planet_last_captured_at := -10000.0
 var current_time := 0.0
 @onready var player: Player = $Player
@@ -42,14 +44,19 @@ var current_time := 0.0
 
 
 func _ready() -> void:
-	var planet_1 := create_planet()
-	var player_planet_r := 4000.0
-	player.global_position = planet_1.global_position + Vector2(player_planet_r, 0.0)
-	var player_orbital_speed := sqrt(GRAVITY * planet_1.mass / player_planet_r)
+	var start_planet := create_planet()
+	start_planet.color_circle.color = PLANET_PLAYER_COLOR
+
+	var player_planet_r := start_planet.circle.radius + 1000.0
+	player.global_position = start_planet.global_position + Vector2(player_planet_r, 0.0)
+	var player_orbital_speed := sqrt(GRAVITY * start_planet.mass / player_planet_r)
 	player.linear_velocity = Vector2(0.0, player_orbital_speed)
+
 	pause_button.button_down.connect(on_pause_button_down)
 	play_button.button_down.connect(on_play_button_down)
 	restart_button.button_down.connect(on_restart_button_down)
+
+	create_enemy_planet()
 
 
 func create_planet() -> Planet:
@@ -61,29 +68,34 @@ func create_planet() -> Planet:
 	var distance := randf_range(15000.0, 20000.0)
 	planet.global_position = player.global_position + dir * distance
 
-	planet.color_circle.color = PLANET_ENEMY_COLOR
 	planet.body_entered.connect(on_planet_body_entered.bind(planet))
-
-	var min_r := 50.0
-	var max_r := 1500.0
 
 	if planets_captured > 2:
 		var moon: Moon = moon_scene.instantiate()
 		moon.planet = planet
 		moon.planet_theta = randf_range(0.0, TAU)
-		moon.planet_r = planet.circle.radius + randf_range(min_r, max_r)
+		moon.planet_r = planet.circle.radius + randf_range(MIN_ORBIT_DISTANCE, MAX_ORBIT_DISTANCE)
 		moon.position = moon.planet.position + Vector2.from_angle(moon.planet_theta) * moon.planet_r
 		moon.body_entered.connect(on_planet_body_entered.bind(moon))
 		add_child(moon)
 		moon.color_circle.color = PLANET_ENEMY_COLOR
 		planet.moon = moon
 
+	return planet
+
+
+func create_enemy_planet() -> void:
+	var planet := create_planet()
+
+	planet.color_circle.color = PLANET_ENEMY_COLOR
+	planet.enemy = true
+
 	var enemies := mini(planets_captured + 1, 5)
 	for i in enemies:
 		var enemy: Enemy = enemy_scene.instantiate()
 		enemy.planet = planet
 		enemy.planet_theta = randf_range(0.0, TAU)
-		enemy.planet_r = planet.circle.radius + randf_range(min_r, max_r)
+		enemy.planet_r = planet.circle.radius + randf_range(MIN_ORBIT_DISTANCE, MAX_ORBIT_DISTANCE)
 		enemy.position = enemy.planet.position + Vector2.from_angle(enemy.planet_theta) * enemy.planet_r
 		add_child(enemy)
 
@@ -94,8 +106,6 @@ func create_planet() -> Planet:
 	var pickup_dist := planet.circle.radius + randf_range(500.0, 2000.0)
 	pickup.global_position = planet.global_position + pickup_dir * pickup_dist
 	pickup.body_entered.connect(on_pickup_body_entered.bind(pickup))
-
-	return planet
 
 
 func _physics_process(delta: float) -> void:
@@ -333,7 +343,7 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 				enemy.planet.moon.color_circle.color = PLANET_PLAYER_COLOR
 			planets_captured += 1
 			planet_last_captured_at = current_time
-			get_tree().create_timer(PLANET_CAPTURED_MESSAGE_DURATION + 0.4).timeout.connect(create_planet)
+			get_tree().create_timer(PLANET_CAPTURED_MESSAGE_DURATION + 0.4).timeout.connect(create_enemy_planet)
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
