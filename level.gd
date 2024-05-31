@@ -307,11 +307,15 @@ func physics_process_ui() -> void:
 
 func _input(event: InputEvent) -> void:
 	var z := player.camera.zoom.x
-	if event.is_action("scroll_up"):
+	if event is InputEventPanGesture:
+		var g := event as InputEventPanGesture
+		z += z * g.delta.y * 0.05
+	elif event.is_action("scroll_up"):
 		z *= 0.8
-	if event.is_action("scroll_down"):
+	elif event.is_action("scroll_down"):
 		z *= 1.2
 	z = clampf(z, 0.1, 2.0)
+
 	player.camera.zoom = Vector2(z, z)
 
 	if event is InputEventKey:
