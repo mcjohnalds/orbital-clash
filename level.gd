@@ -148,38 +148,11 @@ func physics_process_player(delta) -> void:
 		var r := v.length()
 		player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
 
-	if player.cannon_enabled and current_time - player.cannon_last_fired_at >= 1.0 / Player.CANNON_FIRE_RATE:
-		player.cannon_last_fired_at = current_time
+	if current_time - player.last_fired_at >= 1.0 / Player.FIRE_RATE:
+		player.last_fired_at = current_time
 		var bullet: Bullet = bullet_scene.instantiate()
 		bullet.position = player.position
 		bullet.velocity = player.linear_velocity + player.transform.x * BULLET_SPEED
-		bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
-		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
-		bullet.created_at = current_time
-		bullet.source = Bullet.Source.PLAYER
-		add_child(bullet)
-		bullet.color_circle.color = Player.COLOR
-
-	if player.auto_turret_enabled and current_time - player.auto_turret_last_fired_at >= 1.0 / Player.AUTO_TURRET_FIRE_RATE:
-		player.auto_turret_last_fired_at = current_time
-		var bullet: Bullet = bullet_scene.instantiate()
-		bullet.position = player.position
-
-		var nearest_enemy: Enemy = null
-		for enemy: Enemy in get_tree().get_nodes_in_group("enemies"):
-			if not nearest_enemy:
-				nearest_enemy = enemy
-				continue
-			var d1 := enemy.position.distance_to(player.position)
-			var d2 := nearest_enemy.position.distance_to(player.position)
-			if d1 < d2:
-				nearest_enemy = enemy
-
-		var dir := player.transform.x
-		if nearest_enemy:
-			dir = player.position.direction_to(nearest_enemy.position)
-
-		bullet.velocity = player.linear_velocity + dir * BULLET_SPEED
 		bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 		bullet.created_at = current_time
@@ -315,16 +288,7 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action("scroll_down"):
 		z *= 1.2
 	z = clampf(z, 0.1, 2.0)
-
 	player.camera.zoom = Vector2(z, z)
-
-	if event is InputEventKey:
-		var k := event as InputEventKey
-		if k.pressed:
-			if k.keycode == KEY_1:
-				player.cannon_enabled = !player.cannon_enabled
-			if k.keycode == KEY_2:
-				player.auto_turret_enabled = !player.auto_turret_enabled
 
 
 func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:

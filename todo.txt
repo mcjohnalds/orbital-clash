@@ -1,6 +1,5 @@
 Todo:
 
-- Disable auto turret
 - Better end screen
 - Planet graphics - random
 - Bullet graphic
