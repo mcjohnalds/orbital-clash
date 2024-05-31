@@ -1,6 +1,6 @@
 Todo:
 
-- Planet graphics - random
+- Moon graphics
 - Bullet graphic
 - Better font
 - Sound
@@ -30,6 +30,7 @@ Todo:
 - Animate start screen
 - Settings
 - Game balance
+- Window size
 - Export
   - Web
   - Windows
@@ -61,3 +62,4 @@ Ideas:
 - Camera pan acceleration
 - Make HUD pretty
 - Improve barrel to be more circular
+- Gradual planet color transition

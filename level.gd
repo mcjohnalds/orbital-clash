@@ -12,7 +12,7 @@ const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
 const ENEMY_DAMAGE := 0.17
-const PLANET_DAMAGE := 1.17
+const PLANET_DAMAGE := 0.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
 var planets_captured := 0
@@ -25,6 +25,13 @@ var confirm_restart := false
 @onready var health_scene := preload("res://health.tscn")
 @onready var moon_scene := preload("res://moon.tscn")
 @onready var enemy_scene := preload("res://enemy.tscn")
+var planet_textures: Array[Texture2D] = [
+	preload("res://planet_1.png"),
+	preload("res://planet_2.png"),
+	preload("res://planet_3.png"),
+	preload("res://planet_4.png"),
+	preload("res://planet_5.png"),
+]
 @onready var bars: Control = $CanvasLayer/Bars
 @onready var health_bar: Panel = $CanvasLayer/Bars/Health
 @onready var health_bar_fill: Panel = $CanvasLayer/Bars/Health/Fill
@@ -48,7 +55,7 @@ var confirm_restart := false
 
 func _ready() -> void:
 	var start_planet := create_planet()
-	start_planet.color_circle.color = PLANET_PLAYER_COLOR
+	make_planet_player(start_planet)
 
 	var player_planet_r := start_planet.circle.radius + 1000.0
 	player.global_position = start_planet.global_position + Vector2(player_planet_r, 0.0)
@@ -60,11 +67,14 @@ func _ready() -> void:
 	restart_button.button_down.connect(on_restart_button_down)
 	pause_menu_restart_button.button_down.connect(on_pause_menu_restart_button_down)
 
-	get_tree().create_timer(3.0).timeout.connect(create_enemy_planet)
+	get_tree().create_timer(2.0).timeout.connect(create_enemy_planet)
 
 
 func create_planet() -> Planet:
 	var planet: Planet = planet_scene.instantiate()
+
+	var sprite: Sprite2D = planet.get_node("Sprite2D")
+	sprite.texture = planet_textures.pick_random()
 
 	add_child(planet)
 
@@ -91,9 +101,6 @@ func create_planet() -> Planet:
 func create_enemy_planet() -> void:
 	var planet := create_planet()
 
-	planet.color_circle.color = PLANET_ENEMY_COLOR
-	planet.enemy = true
-
 	var enemies := mini(planets_captured + 1, 5)
 	for i in enemies:
 		var enemy: Enemy = enemy_scene.instantiate()
@@ -110,6 +117,9 @@ func create_enemy_planet() -> void:
 	var pickup_dist := planet.circle.radius + randf_range(500.0, 2000.0)
 	pickup.global_position = planet.global_position + pickup_dir * pickup_dist
 	pickup.body_entered.connect(on_pickup_body_entered.bind(pickup))
+
+	update_enemy_planet_indicator()
+	enemy_planet_indicator.visible = true
 
 
 func _physics_process(delta: float) -> void:
@@ -224,34 +234,7 @@ func physics_process_enemy(delta: float) -> void:
 func physics_process_ui() -> void:
 	health_bar_fill.size.x = health_bar.size.x * player.health
 	boost_bar_fill.size.x = boost_bar.size.x * player.boost
-
-	var nearest_enemy_planet: Planet
-	for planet: Planet in get_tree().get_nodes_in_group("planets"):
-		if not planet.enemy:
-			continue
-		if not nearest_enemy_planet:
-			nearest_enemy_planet = planet
-			continue
-		var d1 := planet.global_position.distance_to(player.global_position)
-		var d2 := nearest_enemy_planet.global_position.distance_to(player.global_position)
-		if d1 < d2:
-			nearest_enemy_planet = planet
-
-	if nearest_enemy_planet:
-		var dir := player.global_position.direction_to(nearest_enemy_planet.global_position)
-		var ellipse_size := get_viewport_rect().size * Vector2(0.7, 0.8)
-		var theta := dir.angle()
-		var r := get_ellipse_r(theta, ellipse_size)
-		var viewport_center := get_viewport_rect().size / 2.0
-		enemy_planet_indicator_text.position = viewport_center + dir * r
-		var dist := player.global_position.distance_to(nearest_enemy_planet.global_position)
-		enemy_planet_indicator_label.text = "ENEMY PLANET %s Mm" % round(dist / 1000.0)
-
-		var ellipse_2_size := enemy_planet_indicator_label.size * Vector2(1.2, 3.0)
-		var r_2 := get_ellipse_r(theta, ellipse_2_size)
-		var p := enemy_planet_indicator_text.position
-		enemy_planet_indicator_arrow.position = p + dir * r_2
-		enemy_planet_indicator_arrow.rotation = theta
+	update_enemy_planet_indicator()
 
 	if speed_up_button.button_pressed:
 		Engine.time_scale = 10.0
@@ -290,10 +273,7 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
 				planet_has_enemy = true
 		if player.alive and not planet_has_enemy:
-			enemy.planet.enemy = false
-			enemy.planet.color_circle.color = PLANET_PLAYER_COLOR
-			if enemy.planet.moon:
-				enemy.planet.moon.color_circle.color = PLANET_PLAYER_COLOR
+			make_planet_player(enemy.planet)
 			planets_captured += 1
 			planet_captured_label.visible = true
 			enemy_planet_indicator.visible = false
@@ -302,7 +282,6 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			get_tree().create_timer(2.0).timeout.connect(func() -> void:
 				create_enemy_planet()
 				planet_captured_label.visible = false
-				enemy_planet_indicator.visible = true
 			)
 
 
@@ -389,3 +368,42 @@ func on_pause_menu_restart_button_down() -> void:
 	else:
 		confirm_restart = true
 		pause_menu_restart_button.text = "REALLY?"
+
+
+func make_planet_player(planet: Planet) -> void:
+	var sprite: Sprite2D = planet.get_node("Sprite2D")
+	var shader: ShaderMaterial = sprite.material
+	shader.set_shader_parameter("shiftHue", -0.26)
+	planet.enemy = false
+	if planet.moon:
+		planet.moon.color_circle.color = PLANET_PLAYER_COLOR
+
+
+func update_enemy_planet_indicator() -> void:
+	var nearest_enemy_planet: Planet
+	for planet: Planet in get_tree().get_nodes_in_group("planets"):
+		if not planet.enemy:
+			continue
+		if not nearest_enemy_planet:
+			nearest_enemy_planet = planet
+			continue
+		var d1 := planet.global_position.distance_to(player.global_position)
+		var d2 := nearest_enemy_planet.global_position.distance_to(player.global_position)
+		if d1 < d2:
+			nearest_enemy_planet = planet
+
+	if nearest_enemy_planet:
+		var dir := player.global_position.direction_to(nearest_enemy_planet.global_position)
+		var ellipse_size := get_viewport_rect().size * Vector2(0.7, 0.8)
+		var theta := dir.angle()
+		var r := get_ellipse_r(theta, ellipse_size)
+		var viewport_center := get_viewport_rect().size / 2.0
+		enemy_planet_indicator_text.position = viewport_center + dir * r
+		var dist := player.global_position.distance_to(nearest_enemy_planet.global_position)
+		enemy_planet_indicator_label.text = "ENEMY PLANET %s Mm" % round(dist / 1000.0)
+
+		var ellipse_2_size := enemy_planet_indicator_label.size * Vector2(1.2, 3.0)
+		var r_2 := get_ellipse_r(theta, ellipse_2_size)
+		var p := enemy_planet_indicator_text.position
+		enemy_planet_indicator_arrow.position = p + dir * r_2
+		enemy_planet_indicator_arrow.rotation = theta
