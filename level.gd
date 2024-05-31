@@ -140,8 +140,7 @@ func physics_process_player(delta) -> void:
 	var boost_m := -0.01 if thrusting else 0.0
 	player.boost = clampf(player.boost + boost_m * delta, 0.0, 1.0)
 	if player.boost == 0.0:
-		player.alive = false
-		player.process_mode = Node.PROCESS_MODE_DISABLED
+		kill_player()
 
 	for planet: Planet in get_tree().get_nodes_in_group("planets"):
 		var v := planet.global_position - player.global_position

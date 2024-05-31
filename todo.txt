@@ -1,6 +1,5 @@
 Todo:
 
-- Kill player if out of fuel
 - Add restart button to pause menu
 - Planet graphics - random
 - Bullet graphic
@@ -62,3 +61,4 @@ Ideas:
 - Smooth zoom
 - Camera pan acceleration
 - Make HUD pretty
+- Improve barrel to be more circular
