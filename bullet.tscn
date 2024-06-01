@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3psqdepcl814"]
+[gd_scene load_steps=6 format=3 uid="uid://b3psqdepcl814"]
 
 [ext_resource type="Script" path="res://bullet.gd" id="1_s43gh"]
 [ext_resource type="Texture2D" uid="uid://d0b7f1m6vp53l" path="res://bullet.png" id="2_hxomo"]
 [ext_resource type="Texture2D" uid="uid://cnoh1dfuf7d5k" path="res://bullet_trail.png" id="4_xioye"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qi7vx"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vyyox"]
+blend_mode = 1
 
 [node name="Bullet" type="Area2D" groups=["bullets"]]
 script = ExtResource("1_s43gh")
@@ -13,11 +16,13 @@ script = ExtResource("1_s43gh")
 shape = SubResource("CircleShape2D_qi7vx")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_vyyox")
 scale = Vector2(0.0441009, 0.0441009)
 texture = ExtResource("2_hxomo")
 
 [node name="Line2D" type="Line2D" parent="."]
 top_level = true
+material = SubResource("CanvasItemMaterial_vyyox")
 points = PackedVector2Array(2.08165e-12, 60, 2.08165e-12, 30, 0, 0)
 width = 25.0
 texture = ExtResource("4_xioye")

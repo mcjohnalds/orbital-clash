@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d0nli4j2k12vh"]
+[gd_scene load_steps=23 format=3 uid="uid://d0nli4j2k12vh"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_dh41o"]
 [ext_resource type="Texture2D" uid="uid://b6kcfrhca8ep3" path="res://player.png" id="2_7in78"]
@@ -10,10 +10,91 @@
 [ext_resource type="AudioStream" uid="uid://cn6c8t066tmgf" path="res://cinematic_impact.ogg" id="7_j1fa5"]
 [ext_resource type="AudioStream" uid="uid://cchc2kla3vhvd" path="res://phone_base.ogg" id="8_c4f0y"]
 [ext_resource type="AudioStream" uid="uid://cmw6l0tj22nqk" path="res://camera_flash.ogg" id="9_32ysc"]
+[ext_resource type="Texture2D" uid="uid://chjojoev03qul" path="res://addons/kenney_particle_pack/flame_02.png" id="11_37ttj"]
+[ext_resource type="Texture2D" uid="uid://blobnupd2ptpn" path="res://addons/kenney_particle_pack/circle_05.png" id="11_c6fux"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_875e1"]
+
+[sub_resource type="Curve" id="Curve_fmrb7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.9416, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_d5yov"]
+curve = SubResource("Curve_fmrb7")
+
+[sub_resource type="Curve" id="Curve_5v48t"]
+min_value = 2.13163e-14
+_data = [Vector2(0, 2.13163e-14), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_enabled = true
+
+[sub_resource type="CurveTexture" id="CurveTexture_4ifox"]
+curve = SubResource("Curve_5v48t")
+
+[sub_resource type="Curve" id="Curve_l0dif"]
+_data = [Vector2(0, 1), 0.0, 0.0212564, 0, 0, Vector2(1, 0), -1.72708, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8mqf5"]
+curve = SubResource("Curve_l0dif")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bw5cd"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 10.0
+angle_max = 360.0
+angle_curve = SubResource("CurveTexture_4ifox")
+direction = Vector3(-1, 2.08165e-12, 2.08165e-12)
+spread = 2.0
+initial_velocity_min = 500.0
+initial_velocity_max = 500.0
+gravity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+scale_min = 0.2
+scale_max = 0.25
+scale_curve = SubResource("CurveTexture_8mqf5")
+color = Color(1, 1, 1, 0.301961)
+alpha_curve = SubResource("CurveTexture_d5yov")
+turbulence_enabled = true
+turbulence_noise_strength = 0.1
+turbulence_noise_scale = 1.0
+turbulence_noise_speed_random = 0.01
+turbulence_influence_min = 0.01
+turbulence_influence_max = 0.01
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_55asg"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_m1e0y"]
+blend_mode = 1
 
 [node name="Player" type="RigidBody2D"]
 center_of_mass_mode = 1
 script = ExtResource("1_dh41o")
+
+[node name="Exhaust" type="Node2D" parent="."]
+position = Vector2(13, 0)
+
+[node name="GPUParticles2D1" type="GPUParticles2D" parent="Exhaust"]
+modulate = Color(0.439216, 0.666667, 0.709804, 1)
+material = SubResource("CanvasItemMaterial_875e1")
+position = Vector2(-60, 0)
+amount = 30
+process_material = SubResource("ParticleProcessMaterial_bw5cd")
+texture = ExtResource("11_37ttj")
+explosiveness = 0.05
+randomness = 0.48
+fixed_fps = 60
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="Exhaust"]
+modulate = Color(0.439216, 0.666667, 0.709804, 1)
+material = SubResource("CanvasItemMaterial_55asg")
+position = Vector2(-60, 0)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_bw5cd")
+texture = ExtResource("11_c6fux")
+explosiveness = 0.05
+randomness = 0.48
+fixed_fps = 60
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2(-68, -80)
@@ -22,12 +103,6 @@ polygon = PackedVector2Array(-4, -14, -4, 94, 81.5, 40)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.5, 0.5)
-
-[node name="Exhaust" type="Polygon2D" parent="."]
-position = Vector2(-68, 2.08165e-12)
-scale = Vector2(1, 1.4)
-color = Color(0.7134, 0.87, 0.85434, 1)
-polygon = PackedVector2Array(2.08165e-12, -30, -259, 2.08165e-12, 2.08165e-12, 30)
 
 [node name="Player" type="Sprite2D" parent="."]
 rotation = 1.5708
@@ -73,6 +148,7 @@ bus = &"World"
 
 [node name="ExhaustLine" type="Line2D" parent="."]
 top_level = true
+material = SubResource("CanvasItemMaterial_m1e0y")
 points = PackedVector2Array(-147, 2.08165e-12, -107, 2.08165e-12, -67, 2.08165e-12)
 width = 150.0
 texture = ExtResource("2_l7onn")

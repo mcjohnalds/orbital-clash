@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b84bm82tapnac"]
+[gd_scene load_steps=8 format=3 uid="uid://b84bm82tapnac"]
 
 [ext_resource type="Script" path="res://enemy.gd" id="1_c3l3k"]
 [ext_resource type="Texture2D" uid="uid://pg0m7jawcipq" path="res://enemy.png" id="2_2n4v7"]
@@ -9,6 +9,9 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_810mk"]
 radius = 47.0
 height = 198.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5vt6t"]
+blend_mode = 1
 
 [node name="Enemy" type="Area2D" groups=["enemies"]]
 script = ExtResource("1_c3l3k")
@@ -35,6 +38,7 @@ bus = &"World"
 
 [node name="ExhaustLine" type="Line2D" parent="."]
 top_level = true
+material = SubResource("CanvasItemMaterial_5vt6t")
 points = PackedVector2Array(-147, 2.08165e-12, -107, 2.08165e-12, -67, 2.08165e-12)
 width = 150.0
 texture = ExtResource("5_1wirq")

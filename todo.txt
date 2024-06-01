@@ -1,7 +1,6 @@
 Todo:
 
 - Particle effects
-  - Player boost
   - Player turn
   - Player shoot
   - Player hit

@@ -81,7 +81,7 @@ func _ready() -> void:
 
 	player.exhaust_line.clear_points()
 	player.exhaust_line.modulate = Main.PLAYER_COLORS[0]
-	player.exhaust_line.modulate.a = 0.15
+	player.exhaust_line.modulate.a = 0.2
 
 
 func create_planet() -> Planet:
@@ -124,7 +124,7 @@ func create_enemy_planet() -> void:
 		add_child(enemy)
 		enemy.exhaust_line.clear_points()
 		enemy.exhaust_line.modulate = Main.ENEMY_COLORS[0]
-		enemy.exhaust_line.modulate.a = 0.15
+		enemy.exhaust_line.modulate.a = 0.2
 
 	var scene: PackedScene = [fuel_scene, health_scene].pick_random()
 	var pickup: Area2D = scene.instantiate()
@@ -163,7 +163,8 @@ func physics_process_player(delta) -> void:
 	if thrusting:
 		player.apply_central_force(player.transform.x * thrust)
 
-	player.exhaust.visible = thrusting
+	for p: GPUParticles2D in player.exhaust.get_children():
+		p.emitting = thrusting
 
 	var boost_m := -0.01 if thrusting else 0.0
 
@@ -182,7 +183,7 @@ func physics_process_player(delta) -> void:
 			player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
 
 		player.exhaust_line.add_point(player.global_position)
-		if player.exhaust_line.points.size() > 100:
+		if player.exhaust_line.points.size() > 200:
 			player.exhaust_line.remove_point(0)
 
 	if current_time - player.last_fired_at >= 1.0 / PLAYER_FIRE_RATE and player.alive:
@@ -198,7 +199,7 @@ func physics_process_player(delta) -> void:
 
 		bullet.line.clear_points()
 		bullet.line.modulate = Main.PLAYER_COLORS[0]
-		bullet.line.modulate.a = 0.2
+		bullet.line.modulate.a = 0.1
 		bullet.sprite.modulate = Main.PLAYER_COLORS[0]
 
 		player.shoot_asp.play()
@@ -247,7 +248,7 @@ func physics_process_enemy(delta: float) -> void:
 		var velocity := (enemy.position - last_position) / delta
 
 		enemy.exhaust_line.add_point(enemy.global_position)
-		if enemy.exhaust_line.points.size() > 100:
+		if enemy.exhaust_line.points.size() > 200:
 			enemy.exhaust_line.remove_point(0)
 
 		if player.visible:
@@ -272,7 +273,7 @@ func physics_process_enemy(delta: float) -> void:
 
 				bullet.line.clear_points()
 				bullet.line.modulate = Main.ENEMY_COLORS[0]
-				bullet.line.modulate.a = 0.2
+				bullet.line.modulate.a = 0.1
 				bullet.sprite.modulate = Main.ENEMY_COLORS[0]
 				bullet.line.visible = true
 
