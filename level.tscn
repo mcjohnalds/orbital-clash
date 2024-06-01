@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://c77cunsi4i00u"]
+[gd_scene load_steps=10 format=3 uid="uid://c77cunsi4i00u"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_br7jx"]
 [ext_resource type="PackedScene" uid="uid://d0nli4j2k12vh" path="res://player.tscn" id="2_qsgls"]
+[ext_resource type="AudioStream" uid="uid://q6h7obb3bcmk" path="res://cinematic_hit_bass.ogg" id="3_p503k"]
+[ext_resource type="AudioStream" uid="uid://e0n4o6sivoxu" path="res://cinematic_woosh.ogg" id="4_0acxi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_83cng"]
 bg_color = Color(1, 1, 1, 0)
@@ -394,3 +396,9 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 35
 text = "Paused"
 horizontal_alignment = 1
+
+[node name="GameOverASP" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_p503k")
+
+[node name="PlanetCapturedASP" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_0acxi")

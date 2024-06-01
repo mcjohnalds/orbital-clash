@@ -1,9 +1,11 @@
 class_name Level
 extends Node2D
 
+const MUSIC_BPM := 160.0
 const MIN_ORBIT_DISTANCE := 50.0
 const MAX_ORBIT_DISTANCE := 1500.0
 const ENEMY_FIRE_RATE := 2.0
+const PLAYER_FIRE_RATE := MUSIC_BPM / 60.0
 const HEALTH_PICKUP_AMOUNT := 0.2
 const FUEL_PICKUP_AMOUNT := 1.0
 const BULLET_LIFETIME = 6.0
@@ -52,6 +54,8 @@ var planet_textures: Array[Texture2D] = [
 @onready var game_over_label: Label = $CanvasLayer/GameOverLabel
 @onready var pause_menu_restart_button: Button = $CanvasLayer/Paused/RestartButton
 @onready var bullets: Node2D = $Bullets
+@onready var game_over_asp: AudioStreamPlayer = $GameOverASP
+@onready var planet_captured_asp: AudioStreamPlayer = $PlanetCapturedASP
 
 
 func _ready() -> void:
@@ -69,6 +73,8 @@ func _ready() -> void:
 	pause_menu_restart_button.button_down.connect(on_pause_menu_restart_button_down)
 
 	get_tree().create_timer(2.0).timeout.connect(create_enemy_planet)
+
+	update_world_volume()
 
 
 func create_planet() -> Planet:
@@ -132,36 +138,40 @@ func _physics_process(delta: float) -> void:
 
 
 func physics_process_player(delta) -> void:
-	if !player.alive:
-		player.visible = false
-		return
-
-	var mouse_global_position := player.camera.global_position - player.camera.get_viewport_rect().size / 2.0 + get_viewport().get_mouse_position()
-	var max_torque := 200000.0
-	var kp := 5.0
-	var kd := 2.0
-	var angle := player.get_angle_to(mouse_global_position)
-	var desired_torque := max_torque * (kp * angle + kd * -player.angular_velocity)
-	var actual_torque := clampf(desired_torque, -max_torque, max_torque)
-	player.apply_torque(actual_torque)
+	if player.alive:
+		var mouse_global_position := player.camera.global_position - player.camera.get_viewport_rect().size / 2.0 + get_viewport().get_mouse_position()
+		var max_torque := 200000.0
+		var kp := 5.0
+		var kd := 2.0
+		var angle := player.get_angle_to(mouse_global_position)
+		var desired_torque := max_torque * (kp * angle + kd * -player.angular_velocity)
+		var actual_torque := clampf(desired_torque, -max_torque, max_torque)
+		player.apply_torque(actual_torque)
 
 	var thrust := 200.0
-	var thrusting := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not speed_up_button.button_pressed
+	var thrusting := player.alive and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not speed_up_button.button_pressed
 	if thrusting:
 		player.apply_central_force(player.transform.x * thrust)
+
 	player.exhaust.visible = thrusting
+
 	var boost_m := -0.01 if thrusting else 0.0
+
 	player.boost = clampf(player.boost + boost_m * delta, 0.0, 1.0)
-	if player.boost == 0.0:
+
+	if player.boost == 0.0 and player.alive:
 		kill_player()
 
-	for planet: Planet in get_tree().get_nodes_in_group("planets"):
-		var v := planet.global_position - player.global_position
-		var d := v.normalized()
-		var r := v.length()
-		player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
+	player.thrust_asp.stream_paused = not thrusting
 
-	if current_time - player.last_fired_at >= 1.0 / Player.FIRE_RATE:
+	if player.visible:
+		for planet: Planet in get_tree().get_nodes_in_group("planets"):
+			var v := planet.global_position - player.global_position
+			var d := v.normalized()
+			var r := v.length()
+			player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
+
+	if current_time - player.last_fired_at >= 1.0 / PLAYER_FIRE_RATE and player.alive:
 		player.last_fired_at = current_time
 		var bullet: Bullet = bullet_scene.instantiate()
 		bullet.position = player.position
@@ -172,9 +182,10 @@ func physics_process_player(delta) -> void:
 		bullet.source = Bullet.Source.PLAYER
 		bullets.add_child(bullet)
 		set_color_to_player(bullet)
+		player.shoot_asp.play()
 
 	var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
-	if damage_cooldown:
+	if damage_cooldown and player.alive:
 		if fmod(current_time, 0.2) < 0.1:
 			player.modulate.a = 0.3
 		else:
@@ -210,7 +221,7 @@ func physics_process_enemy(delta: float) -> void:
 		enemy.position = enemy.planet.position + Vector2.from_angle(enemy.planet_theta) * enemy.planet_r
 		var velocity := (enemy.position - last_position) / delta
 
-		if player.alive:
+		if player.visible:
 			var fire_rate := ENEMY_FIRE_RATE
 			if current_time - enemy.last_fired_at >= 1.0 / fire_rate:
 				enemy.last_fired_at = current_time
@@ -235,7 +246,7 @@ func physics_process_ui() -> void:
 	boost_bar_fill.size.x = boost_bar.size.x * player.boost
 	update_enemy_planet_indicator()
 
-	if speed_up_button.button_pressed:
+	if speed_up_button.button_pressed and player.alive:
 		Engine.time_scale = 10.0
 		Engine.physics_ticks_per_second = 600
 		Engine.max_physics_steps_per_frame = 80
@@ -256,6 +267,12 @@ func _input(event: InputEvent) -> void:
 		z *= 1.2
 	z = clampf(z, 0.1, 2.0)
 	player.camera.zoom = Vector2(z, z)
+	update_world_volume()
+
+
+func update_world_volume() -> void:
+	var vol := remap(player.camera.zoom.x, 0.1, 2.0, -5.0, 0.0)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("World"), vol)
 
 
 func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
@@ -271,23 +288,40 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 		for enemy2: Enemy in get_tree().get_nodes_in_group("enemies"):
 			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
 				planet_has_enemy = true
-		if player.alive and not planet_has_enemy:
-			set_planet_to_player(enemy.planet)
-			planets_captured += 1
-			planet_captured_label.visible = true
-			enemy_planet_indicator.visible = false
-			planets_captured_label_bottom_right.text = "PLANETS CAPTURED: %s" % planets_captured
-			planets_captured_label_bottom_right.visible = true
-			get_tree().create_timer(2.0).timeout.connect(func() -> void:
-				create_enemy_planet()
-				planet_captured_label.visible = false
-			)
+		if planet_has_enemy:
+			return
+
+		# Need to get a reference to the planet because the enemy will
+		# disappear after the await
+		var planet = enemy.planet
+
+		# Planet captured sequence
+		if not player.alive:
+			return
+		enemy_planet_indicator.visible = false
+		planet_captured_asp.play()
+		# It takes 1.7 seconds to reach the "climax" of the planet captured
+		# sound effect
+		await get_tree().create_timer(1.7).timeout
+		if not player.alive:
+			return
+		set_planet_to_player(planet)
+		planets_captured += 1
+		planet_captured_label.visible = true
+		planets_captured_label_bottom_right.text = "PLANETS CAPTURED: %s" % planets_captured
+		planets_captured_label_bottom_right.visible = true
+		await get_tree().create_timer(2.0).timeout
+		if not player.alive:
+			return
+		create_enemy_planet()
+		planet_captured_label.visible = false
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
-	if body is Player and bullet.source == Bullet.Source.ENEMY:
+	if body is Player and bullet.source == Bullet.Source.ENEMY and player.visible:
+		player.hit_asp.play()
 		var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
-		if not damage_cooldown:
+		if not damage_cooldown and player.alive:
 			player.last_hit_at = current_time
 			player.health = maxf(player.health - ENEMY_DAMAGE, 0.0)
 			if player.health == 0.0:
@@ -296,9 +330,10 @@ func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
 
 
 func on_planet_body_entered(body: Node2D, planet: Node2D) -> void:
-	if body is Player:
+	if body is Player and player.visible:
+		player.hit_asp.play()
 		var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
-		if not damage_cooldown:
+		if not damage_cooldown and player.alive:
 			player.last_hit_at = current_time
 			player.health = maxf(player.health - PLANET_DAMAGE, 0.0)
 			if player.health == 0.0:
@@ -308,21 +343,35 @@ func on_planet_body_entered(body: Node2D, planet: Node2D) -> void:
 
 
 func kill_player() -> void:
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), -40.0)
+
 	player.alive = false
-	player.process_mode = Node.PROCESS_MODE_DISABLED
 	planets_captured_label_bottom_right.visible = false
 	planet_captured_label.visible = false
+	pause_button.visible = false
+	speed_up_button.visible = false
 	player.health = 0.0
 	player.boost = 0.0
-	get_tree().create_timer(2.0).timeout.connect(func() -> void:
-		pause_button.visible = false
-		speed_up_button.visible = false
-		bars.visible = false
-		game_over_label.visible = true
-		restart_button.visible = true
-		planets_captured_label_center.text = "PLANETS CAPTURED: %s" % planets_captured
-		planets_captured_label_center.visible = true
-	)
+	player.alarm_asp.play()
+	player.angular_velocity = TAU * 0.6
+	await get_tree().create_timer(0.5).timeout
+
+	player.explosion_asp.play()
+	# It takes 1.65 seconds for the explosion sound effect to reach the climax
+	await get_tree().create_timer(1.65).timeout
+
+	bars.visible = false
+	player.visible = false
+	player.alarm_asp.stop()
+	# Slow down camera to a stop
+	player.linear_damp = 2.0
+
+	await get_tree().create_timer(1.0).timeout
+	game_over_label.visible = true
+	restart_button.visible = true
+	planets_captured_label_center.text = "PLANETS CAPTURED: %s" % planets_captured
+	planets_captured_label_center.visible = true
+	game_over_asp.play()
 
 # https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
 func get_ellipse_r(theta: float, size: Vector2) -> float:
@@ -332,7 +381,7 @@ func get_ellipse_r(theta: float, size: Vector2) -> float:
 
 
 func on_pickup_body_entered(body: RigidBody2D, pickup: Variant):
-	if not body is Player:
+	if not body is Player or not player.alive:
 		return
 	if pickup is Health:
 		player.health += HEALTH_PICKUP_AMOUNT
@@ -358,7 +407,7 @@ func on_play_button_down() -> void:
 func on_restart_button_down() -> void:
 	get_tree().paused = false
 	get_tree().reload_current_scene()
-
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), -20.0)
 
 func on_pause_menu_restart_button_down() -> void:
 	if confirm_restart:

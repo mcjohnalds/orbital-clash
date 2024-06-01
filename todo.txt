@@ -1,17 +1,12 @@
 Todo:
 
 - Sound
-  - Music
-  - Boost
-  - Player shoot
-  - Player hit
-  - Player destroyed
-  - Player crash
   - Enemy shoot
   - Enemy destroyed
-  - Planet captured
   - Button press
   - Collect pickup
+  - Enemy planet created
+  - Speed up
 - Better font
 - Particle effects
   - Boost
@@ -62,3 +57,4 @@ Ideas:
 - Improve barrel to be more circular
 - Gradual planet color transition
 - Make barrel shader only apply to UI
+- Test all the different scenarios that can happen when player dies
