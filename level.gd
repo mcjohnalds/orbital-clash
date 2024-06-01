@@ -193,7 +193,7 @@ func physics_process_player(delta) -> void:
 	if current_time - player.last_fired_at >= 1.0 / PLAYER_FIRE_RATE and player.alive:
 		player.last_fired_at = current_time
 		var bullet: Bullet = bullet_scene.instantiate()
-		bullet.position = player.position
+		bullet.position = player.shoot_particles.global_position
 		bullet.velocity = player.linear_velocity + player.transform.x * BULLET_SPEED
 		bullet.body_entered.connect(on_bullet_body_entered.bind(bullet))
 		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
@@ -207,6 +207,9 @@ func physics_process_player(delta) -> void:
 		bullet.sprite.modulate = Main.PLAYER_COLORS[0]
 
 		player.shoot_asp.play()
+
+		player.shoot_particles.restart()
+		player.shoot_particles.emitting = true
 
 	var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
 	if damage_cooldown and player.alive:

@@ -1,7 +1,6 @@
 Todo:
 
 - Particle effects
-  - Player shoot
   - Player hit
   - Player crash
   - Player death spiral

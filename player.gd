@@ -14,6 +14,7 @@ const COLOR := Color("70b5ae")
 @onready var health_pickup_asp: AudioStreamPlayer2D = $HealthPickupASP
 @onready var exhaust_lines: Node2D = $ExhaustLines
 @onready var exhaust_points: Node2D = $ExhaustPoints
+@onready var shoot_particles: GPUParticles2D = $ShootParticles
 var health := 1.0
 var alive := true
 var boost := 1.0
