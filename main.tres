@@ -1,0 +1,12 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://bt3mmge8uxfhp"]
+
+[ext_resource type="FontFile" uid="uid://2grnf343apv3" path="res://orbitron_variable_weight.ttf" id="1_ggyc2"]
+
+[sub_resource type="FontVariation" id="FontVariation_2bosd"]
+base_font = ExtResource("1_ggyc2")
+variation_opentype = {
+2003265652: 600
+}
+
+[resource]
+Label/fonts/font = SubResource("FontVariation_2bosd")

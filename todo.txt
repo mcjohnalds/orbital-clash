@@ -1,6 +1,5 @@
 Todo:
 
-- Better font
 - Particle effects
   - Boost
   - Player shoot
