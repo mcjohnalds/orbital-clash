@@ -1,6 +1,5 @@
 Todo:
 
-- Bullet graphic
 - Better font
 - Sound
   - Music
@@ -62,3 +61,4 @@ Ideas:
 - Make HUD pretty
 - Improve barrel to be more circular
 - Gradual planet color transition
+- Make barrel shader only apply to UI

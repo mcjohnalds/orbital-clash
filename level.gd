@@ -51,11 +51,12 @@ var planet_textures: Array[Texture2D] = [
 @onready var restart_button: Button = $CanvasLayer/RestartButton
 @onready var game_over_label: Label = $CanvasLayer/GameOverLabel
 @onready var pause_menu_restart_button: Button = $CanvasLayer/Paused/RestartButton
+@onready var bullets: Node2D = $Bullets
 
 
 func _ready() -> void:
 	var start_planet := create_planet()
-	set_planet_color_to_player(start_planet)
+	set_planet_to_player(start_planet)
 
 	var player_planet_r := start_planet.circle.radius + 1000.0
 	player.global_position = start_planet.global_position + Vector2(player_planet_r, 0.0)
@@ -169,8 +170,8 @@ func physics_process_player(delta) -> void:
 		bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 		bullet.created_at = current_time
 		bullet.source = Bullet.Source.PLAYER
-		add_child(bullet)
-		bullet.color_circle.color = Player.COLOR
+		bullets.add_child(bullet)
+		set_color_to_player(bullet)
 
 	var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
 	if damage_cooldown:
@@ -226,8 +227,7 @@ func physics_process_enemy(delta: float) -> void:
 				bullet.area_entered.connect(on_bullet_area_entered.bind(bullet))
 				bullet.created_at = current_time
 				bullet.source = Bullet.Source.ENEMY
-				add_child(bullet)
-				bullet.color_circle.color = Enemy.COLOR
+				bullets.add_child(bullet)
 
 
 func physics_process_ui() -> void:
@@ -272,7 +272,7 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
 				planet_has_enemy = true
 		if player.alive and not planet_has_enemy:
-			set_planet_color_to_player(enemy.planet)
+			set_planet_to_player(enemy.planet)
 			planets_captured += 1
 			planet_captured_label.visible = true
 			enemy_planet_indicator.visible = false
@@ -369,15 +369,17 @@ func on_pause_menu_restart_button_down() -> void:
 		pause_menu_restart_button.text = "REALLY?"
 
 
-func set_planet_color_to_player(planet: Planet) -> void:
-	var sprite: Sprite2D = planet.get_node("Sprite2D")
+func set_planet_to_player(planet: Planet) -> void:
+	planet.enemy = false
+	set_color_to_player(planet)
+	if planet.moon:
+		set_color_to_player(planet.moon)
+
+
+func set_color_to_player(node: Node) -> void:
+	var sprite: Sprite2D = node.get_node("Sprite2D")
 	var shader: ShaderMaterial = sprite.material
 	shader.set_shader_parameter("shiftHue", -0.26)
-	planet.enemy = false
-	if planet.moon:
-		var m_sprite: Sprite2D = planet.moon.get_node("Sprite2D")
-		var m_shader: ShaderMaterial = m_sprite.material
-		m_shader.set_shader_parameter("shiftHue", -0.26)
 
 
 func update_enemy_planet_indicator() -> void:

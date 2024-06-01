@@ -1,9 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3psqdepcl814"]
+[gd_scene load_steps=6 format=3 uid="uid://b3psqdepcl814"]
 
 [ext_resource type="Script" path="res://bullet.gd" id="1_s43gh"]
-[ext_resource type="PackedScene" uid="uid://b71k2i5e2eun5" path="res://color_circle.tscn" id="2_sfdnb"]
+[ext_resource type="Texture2D" uid="uid://d0b7f1m6vp53l" path="res://bullet.png" id="2_hxomo"]
+[ext_resource type="Shader" path="res://hue_shift.gdshader" id="2_yxq6g"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qi7vx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o2orp"]
+resource_local_to_scene = true
+shader = ExtResource("2_yxq6g")
+shader_parameter/shiftHue = 2.08165e-12
 
 [node name="Bullet" type="Area2D" groups=["bullets"]]
 script = ExtResource("1_s43gh")
@@ -11,15 +17,7 @@ script = ExtResource("1_s43gh")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qi7vx")
 
-[node name="ColorCircle" parent="." instance=ExtResource("2_sfdnb")]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_o2orp")
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("2_hxomo")

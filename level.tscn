@@ -44,6 +44,8 @@ bg_color = Color(0, 0, 0, 0.913725)
 process_mode = 1
 script = ExtResource("1_br7jx")
 
+[node name="Bullets" type="Node2D" parent="."]
+
 [node name="Player" parent="." instance=ExtResource("2_qsgls")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
