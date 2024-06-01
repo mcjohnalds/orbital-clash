@@ -34,6 +34,7 @@ func on_start_button_pressed() -> void:
 	menu.visible = false
 	level = level_scene.instantiate()
 	level_node.add_child(level)
+	global.interface_asp.play()
 
 
 func _input(event: InputEvent) -> void:

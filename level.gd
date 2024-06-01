@@ -56,9 +56,12 @@ var planet_textures: Array[Texture2D] = [
 @onready var bullets: Node2D = $Bullets
 @onready var game_over_asp: AudioStreamPlayer = $GameOverASP
 @onready var planet_captured_asp: AudioStreamPlayer = $PlanetCapturedASP
+@onready var enemy_planet_asp: AudioStreamPlayer = $EnemyPlanetASP
+@onready var speed_up_asp: AudioStreamPlayer = $SpeedUpASP
 
 
 func _ready() -> void:
+	speed_up_asp.play()
 	var start_planet := create_planet()
 	set_planet_to_player(start_planet)
 
@@ -214,6 +217,8 @@ func physics_process_bullets(delta: float) -> void:
 
 func physics_process_enemy(delta: float) -> void:
 	for enemy: Enemy in get_tree().get_nodes_in_group("enemies"):
+		if not enemy.alive:
+			continue
 		# Speed is velocity required for circular orbit
 		var speed := sqrt(GRAVITY * enemy.planet.mass / enemy.planet_r)
 		enemy.planet_theta += atan2(enemy.planet_r, 0.0) - atan2(enemy.planet_r, speed * delta)
@@ -224,6 +229,7 @@ func physics_process_enemy(delta: float) -> void:
 		if player.visible:
 			var fire_rate := ENEMY_FIRE_RATE
 			if current_time - enemy.last_fired_at >= 1.0 / fire_rate:
+				enemy.shoot_asp.play()
 				enemy.last_fired_at = current_time
 				var bullet: Bullet = bullet_scene.instantiate()
 				bullet.position = enemy.position
@@ -246,6 +252,7 @@ func physics_process_ui() -> void:
 	boost_bar_fill.size.x = boost_bar.size.x * player.boost
 	update_enemy_planet_indicator()
 
+	speed_up_asp.stream_paused = not speed_up_button.button_pressed
 	if speed_up_button.button_pressed and player.alive:
 		Engine.time_scale = 10.0
 		Engine.physics_ticks_per_second = 600
@@ -281,21 +288,21 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 
 	if area is Enemy and bullet.source == Bullet.Source.PLAYER:
 		var enemy: Enemy = area
-		enemy.queue_free()
-		bullet.queue_free()
-
-		var planet_has_enemy := false
-		for enemy2: Enemy in get_tree().get_nodes_in_group("enemies"):
-			if not enemy2.is_queued_for_deletion() and enemy2.planet == enemy.planet:
-				planet_has_enemy = true
-		if planet_has_enemy:
+		if not enemy.alive:
 			return
 
-		# Need to get a reference to the planet because the enemy will
-		# disappear after the await
+		bullet.queue_free()
+		enemy.alive = false
+		enemy.visible = false
+		enemy.explosion_asp.finished.connect(enemy.queue_free)
+		enemy.explosion_asp.play()
+
+		if planet_has_living_enemy(enemy.planet):
+			return
+
+		# Need to get a reference to the planet because the enemy will be freed
 		var planet = enemy.planet
 
-		# Planet captured sequence
 		if not player.alive:
 			return
 		enemy_planet_indicator.visible = false
@@ -315,6 +322,13 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 			return
 		create_enemy_planet()
 		planet_captured_label.visible = false
+
+
+func planet_has_living_enemy(planet: Planet) -> bool:
+	for enemy: Enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy.alive and enemy.planet == planet:
+			return true
+	return false
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
@@ -384,9 +398,11 @@ func on_pickup_body_entered(body: RigidBody2D, pickup: Variant):
 	if not body is Player or not player.alive:
 		return
 	if pickup is Health:
+		player.health_pickup_asp.play()
 		player.health += HEALTH_PICKUP_AMOUNT
 		player.health = clampf(player.health, 0.0, 1.0)
 	else:
+		player.fuel_pickup_asp.play()
 		player.boost += FUEL_PICKUP_AMOUNT
 		player.boost = clampf(player.boost, 0.0, 1.0)
 	pickup.queue_free()
@@ -395,6 +411,7 @@ func on_pickup_body_entered(body: RigidBody2D, pickup: Variant):
 func on_pause_button_down() -> void:
 	get_tree().paused = true
 	paused_control.visible = true
+	global.interface_asp.play()
 
 
 func on_play_button_down() -> void:
@@ -402,14 +419,18 @@ func on_play_button_down() -> void:
 	paused_control.visible = false
 	confirm_restart = false
 	pause_menu_restart_button.text = "RESTART"
+	global.interface_asp.play()
 
 
 func on_restart_button_down() -> void:
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), -20.0)
+	global.interface_asp.play()
+
 
 func on_pause_menu_restart_button_down() -> void:
+	global.interface_asp.play()
 	if confirm_restart:
 		get_tree().paused = false
 		get_tree().reload_current_scene()

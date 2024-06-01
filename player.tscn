@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d0nli4j2k12vh"]
+[gd_scene load_steps=10 format=3 uid="uid://d0nli4j2k12vh"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_dh41o"]
 [ext_resource type="Texture2D" uid="uid://b6kcfrhca8ep3" path="res://player.png" id="2_7in78"]
@@ -7,6 +7,8 @@
 [ext_resource type="AudioStream" uid="uid://du1kmkqr1aldi" path="res://alarm.ogg" id="5_3pt8u"]
 [ext_resource type="AudioStream" uid="uid://drxdhsigsq2ig" path="res://barrel.ogg" id="6_r3kcq"]
 [ext_resource type="AudioStream" uid="uid://cn6c8t066tmgf" path="res://cinematic_impact.ogg" id="7_j1fa5"]
+[ext_resource type="AudioStream" uid="uid://cchc2kla3vhvd" path="res://phone_base.ogg" id="8_c4f0y"]
+[ext_resource type="AudioStream" uid="uid://cmw6l0tj22nqk" path="res://camera_flash.ogg" id="9_32ysc"]
 
 [node name="Player" type="RigidBody2D"]
 center_of_mass_mode = 1
@@ -54,5 +56,16 @@ bus = &"World"
 
 [node name="ExplosionASP" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_j1fa5")
+max_polyphony = 5
+bus = &"World"
+
+[node name="FuelPickupASP" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_c4f0y")
+volume_db = 3.0
+max_polyphony = 5
+bus = &"World"
+
+[node name="HealthPickupASP" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_32ysc")
 max_polyphony = 5
 bus = &"World"

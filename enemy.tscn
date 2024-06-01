@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b84bm82tapnac"]
+[gd_scene load_steps=6 format=3 uid="uid://b84bm82tapnac"]
 
 [ext_resource type="Script" path="res://enemy.gd" id="1_c3l3k"]
 [ext_resource type="Texture2D" uid="uid://pg0m7jawcipq" path="res://enemy.png" id="2_2n4v7"]
+[ext_resource type="AudioStream" uid="uid://dbgiv41mf4ueh" path="res://shoot.ogg" id="3_xompg"]
+[ext_resource type="AudioStream" uid="uid://cv65ow8mjw888" path="res://manhole.ogg" id="4_recyi"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_810mk"]
 radius = 47.0
@@ -10,7 +12,7 @@ height = 198.0
 [node name="Enemy" type="Area2D" groups=["enemies"]]
 script = ExtResource("1_c3l3k")
 
-[node name="Enemy" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708
 scale = Vector2(0.181803, 0.181803)
 texture = ExtResource("2_2n4v7")
@@ -18,3 +20,14 @@ texture = ExtResource("2_2n4v7")
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_810mk")
+
+[node name="ShootASP" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_xompg")
+volume_db = -25.0
+max_polyphony = 5
+bus = &"World"
+
+[node name="ExplosionASP" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_recyi")
+max_polyphony = 5
+bus = &"World"
