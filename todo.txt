@@ -1,6 +1,5 @@
 Todo:
 
-- Better font
 - Sound
   - Music
   - Boost
@@ -13,6 +12,7 @@ Todo:
   - Planet captured
   - Button press
   - Collect pickup
+- Better font
 - Particle effects
   - Boost
   - Player shoot

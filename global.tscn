@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbm3xv8mw3sbe"]
+
+[ext_resource type="AudioStream" uid="uid://cjv5l4w1ae1r3" path="res://trap.ogg" id="1_iof8y"]
+
+[node name="Global" type="Node"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_iof8y")
+autoplay = true
