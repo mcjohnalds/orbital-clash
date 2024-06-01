@@ -79,9 +79,10 @@ func _ready() -> void:
 
 	update_world_volume()
 
-	player.exhaust_line.clear_points()
-	player.exhaust_line.modulate = Main.PLAYER_COLORS[0]
-	player.exhaust_line.modulate.a = 0.2
+	for line: Line2D in player.exhaust_lines.get_children():
+		line.clear_points()
+		line.modulate = Main.PLAYER_COLORS[0]
+		line.modulate.a = 0.2
 
 
 func create_planet() -> Planet:
@@ -182,9 +183,12 @@ func physics_process_player(delta) -> void:
 			var r := v.length()
 			player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
 
-		player.exhaust_line.add_point(player.global_position)
-		if player.exhaust_line.points.size() > 200:
-			player.exhaust_line.remove_point(0)
+		for i in player.exhaust_lines.get_child_count():
+			var line: Line2D = player.exhaust_lines.get_child(i)
+			var point: Node2D = player.exhaust_points.get_child(i)
+			line.add_point(point.global_position)
+			if line.points.size() > 200:
+				line.remove_point(0)
 
 	if current_time - player.last_fired_at >= 1.0 / PLAYER_FIRE_RATE and player.alive:
 		player.last_fired_at = current_time

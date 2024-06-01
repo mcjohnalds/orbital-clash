@@ -1,7 +1,6 @@
 Todo:
 
 - Particle effects
-  - Player turn
   - Player shoot
   - Player hit
   - Player crash
@@ -67,3 +66,4 @@ Ideas:
 - Add clouds to planets
 - Make speed up go faster over time and raise the pitch
 - Make trails exist in screen space
+- Add particle effects and sounds for player for RCS thrusters
