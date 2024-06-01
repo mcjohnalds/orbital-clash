@@ -9,3 +9,4 @@ var last_fired_at := -10000.0
 var alive: bool = true
 @onready var shoot_asp: AudioStreamPlayer2D = $ShootASP
 @onready var explosion_asp: AudioStreamPlayer2D = $ExplosionASP
+@onready var exhaust_line: Line2D = $ExhaustLine

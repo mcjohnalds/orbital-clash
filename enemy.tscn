@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b84bm82tapnac"]
+[gd_scene load_steps=7 format=3 uid="uid://b84bm82tapnac"]
 
 [ext_resource type="Script" path="res://enemy.gd" id="1_c3l3k"]
 [ext_resource type="Texture2D" uid="uid://pg0m7jawcipq" path="res://enemy.png" id="2_2n4v7"]
 [ext_resource type="AudioStream" uid="uid://dbgiv41mf4ueh" path="res://shoot.ogg" id="3_xompg"]
 [ext_resource type="AudioStream" uid="uid://cv65ow8mjw888" path="res://manhole.ogg" id="4_recyi"]
+[ext_resource type="Texture2D" uid="uid://ddxpiy0c1kat2" path="res://exhaust_trail.png" id="5_1wirq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_810mk"]
 radius = 47.0
@@ -31,3 +32,13 @@ bus = &"World"
 stream = ExtResource("4_recyi")
 max_polyphony = 5
 bus = &"World"
+
+[node name="ExhaustLine" type="Line2D" parent="."]
+top_level = true
+points = PackedVector2Array(-147, 2.08165e-12, -107, 2.08165e-12, -67, 2.08165e-12)
+width = 150.0
+texture = ExtResource("5_1wirq")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2

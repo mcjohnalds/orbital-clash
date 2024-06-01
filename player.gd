@@ -12,6 +12,7 @@ const COLOR := Color("70b5ae")
 @onready var explosion_asp: AudioStreamPlayer2D = $ExplosionASP
 @onready var fuel_pickup_asp: AudioStreamPlayer2D = $FuelPickupASP
 @onready var health_pickup_asp: AudioStreamPlayer2D = $HealthPickupASP
+@onready var exhaust_line: Line2D = $ExhaustLine
 var health := 1.0
 var alive := true
 var boost := 1.0
