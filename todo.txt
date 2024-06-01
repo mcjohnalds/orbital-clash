@@ -1,15 +1,19 @@
 Todo:
 
 - Particle effects
-  - Boost
+  - Player boost
+  - Player turn
   - Player shoot
-  - Enemy shoot
   - Player hit
   - Player crash
-  - Enemy destroyed
+  - Player death spiral
+  - Player explosion
+  - Enemy shoot
+  - Enemy explosion
   - Planet captured
   - Pickup idle
   - Pickup collected
+  - Bullet collision
   - Bullet disappear
 - Fix planet and nebula colors
 - Animate start screen
@@ -31,6 +35,8 @@ Todo:
 
 Ideas:
 
+- Give pickups an idle sprite shader
+- Use other sprite shaders on other things in the game
 - Make nebula texture seamless
 - Custom loading screen
 - Different music at different times
@@ -53,3 +59,12 @@ Ideas:
 - Test all the different scenarios that can happen when player dies
 - Consistent button design
 - When health or fuel is low, flash bar and play warning sound
+- Handle when player hits enemy
+- Set enemy spawns, moon spawns, and pickup spawns to never cross paths
+- Play screen shader when fast forwarding
+- Screen shader when paused
+- Color vignette shader
+- Make enemy planet indicator look good
+- Add clouds to planets
+- Make speed up go faster over time and raise the pitch
+- Make trails exist in screen space

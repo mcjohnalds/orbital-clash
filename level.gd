@@ -184,7 +184,12 @@ func physics_process_player(delta) -> void:
 		bullet.created_at = current_time
 		bullet.source = Bullet.Source.PLAYER
 		bullets.add_child(bullet)
-		set_color_to_player(bullet)
+
+		bullet.line.clear_points()
+		bullet.line.modulate = Main.PLAYER_COLORS[0]
+		bullet.line.modulate.a = 0.3
+		bullet.sprite.modulate = Main.PLAYER_COLORS[0]
+
 		player.shoot_asp.play()
 
 	var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
@@ -213,6 +218,10 @@ func physics_process_bullets(delta: float) -> void:
 		bullet.position += bullet.velocity * delta
 		if current_time - bullet.created_at > BULLET_LIFETIME:
 			bullet.queue_free()
+
+		bullet.line.add_point(bullet.global_position)
+		if bullet.line.points.size() > 30:
+			bullet.line.remove_point(0)
 
 
 func physics_process_enemy(delta: float) -> void:
@@ -245,6 +254,12 @@ func physics_process_enemy(delta: float) -> void:
 				bullet.created_at = current_time
 				bullet.source = Bullet.Source.ENEMY
 				bullets.add_child(bullet)
+
+				bullet.line.clear_points()
+				bullet.line.modulate = Main.ENEMY_COLORS[0]
+				bullet.line.modulate.a = 0.3
+				bullet.sprite.modulate = Main.ENEMY_COLORS[0]
+				bullet.line.visible = true
 
 
 func physics_process_ui() -> void:
