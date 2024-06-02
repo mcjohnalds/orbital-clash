@@ -1,6 +1,5 @@
 Todo:
 
-- Change splash screen
 - Game balance
 - Settings
 - Add rim lighting to flat looking planets then rerender
@@ -8,6 +7,8 @@ Todo:
 - Make nebula texture seamless
 - Add a border to the web export
 - Improve CPU performance when speeding up
+- Video trailer
+- Icon
 
 Ideas:
 
