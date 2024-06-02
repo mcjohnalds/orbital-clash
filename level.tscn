@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c77cunsi4i00u"]
+[gd_scene load_steps=13 format=3 uid="uid://c77cunsi4i00u"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_br7jx"]
 [ext_resource type="PackedScene" uid="uid://d0nli4j2k12vh" path="res://player.tscn" id="2_qsgls"]
+[ext_resource type="PackedScene" uid="uid://dbyb7hyv4tyyd" path="res://settings.tscn" id="3_4f3tt"]
 [ext_resource type="AudioStream" uid="uid://q6h7obb3bcmk" path="res://cinematic_hit_bass.ogg" id="3_p503k"]
 [ext_resource type="AudioStream" uid="uid://e0n4o6sivoxu" path="res://cinematic_woosh.ogg" id="4_0acxi"]
 [ext_resource type="AudioStream" uid="uid://jum0vjgcxqqe" path="res://correct.ogg" id="5_euif8"]
@@ -338,6 +339,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_y6t5e")
 
+[node name="Control" type="Control" parent="CanvasLayer/Paused/Panel"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
 [node name="PlayButton" type="Button" parent="CanvasLayer/Paused"]
 layout_mode = 1
 anchors_preset = 8
@@ -345,10 +352,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -74.5
-offset_top = -12.5
-offset_right = 74.5
-offset_bottom = 52.5
+offset_left = -91.5
+offset_top = -102.5
+offset_right = 91.5
+offset_bottom = -37.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -368,10 +375,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -78.0
-offset_top = 77.5
-offset_right = 78.0
-offset_bottom = 142.5
+offset_left = -103.5
+offset_top = -12.5
+offset_right = 103.5
+offset_bottom = 52.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -392,14 +399,21 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -147.5
-offset_top = -94.5
+offset_top = -188.5
 offset_right = 147.5
-offset_bottom = -45.5
+offset_bottom = -131.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 45
 text = "PAUSED"
 horizontal_alignment = 1
+
+[node name="Settings" parent="CanvasLayer/Paused" instance=ExtResource("3_4f3tt")]
+layout_mode = 1
+offset_left = -210.0
+offset_top = 108.0
+offset_right = -210.0
+offset_bottom = 108.0
 
 [node name="GameOverASP" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_p503k")

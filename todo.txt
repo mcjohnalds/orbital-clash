@@ -1,7 +1,7 @@
 Todo:
 
-- Game balance
 - Settings
+- Remove button focus highlight
 - Add rim lighting to flat looking planets then rerender
 - Give pickups an idle sprite shader
 - Make nebula texture seamless
@@ -9,6 +9,7 @@ Todo:
 - Improve CPU performance when speeding up
 - Video trailer
 - Icon
+- Game balance
 
 Ideas:
 

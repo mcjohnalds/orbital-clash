@@ -1,4 +1,4 @@
-[gd_scene load_steps=87 format=3 uid="uid://dcb6h8v8w85ue"]
+[gd_scene load_steps=86 format=3 uid="uid://dcb6h8v8w85ue"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_7uwu3"]
 [ext_resource type="FastNoiseLite" uid="uid://dia22a8lowhlf" path="res://stars_multiply.tres" id="2_dhgmw"]
@@ -17,8 +17,8 @@
 [ext_resource type="Shader" path="res://film_grain.gdshader" id="7_hxq4f"]
 [ext_resource type="Texture2D" uid="uid://b5xpituog24b4" path="res://mouse_middle.png" id="7_jhojc"]
 [ext_resource type="Texture2D" uid="uid://cdvch512fskv0" path="res://addons/kenney_particle_pack/light_03.png" id="8_keeub"]
-[ext_resource type="Shader" path="res://glitch.gdshader" id="9_5k37l"]
 [ext_resource type="Texture2D" uid="uid://pg0m7jawcipq" path="res://enemy.png" id="9_rabyr"]
+[ext_resource type="PackedScene" uid="uid://dbyb7hyv4tyyd" path="res://settings.tscn" id="14_2tnxb"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y7ysu"]
 
@@ -375,30 +375,6 @@ shader_parameter/amount = 0.05
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l1aja"]
 shader = ExtResource("3_ufqta")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k3dun"]
-shader = ExtResource("9_5k37l")
-shader_parameter/overlay = false
-shader_parameter/scanlines_opacity = 0.0
-shader_parameter/scanlines_width = 0.21
-shader_parameter/grille_opacity = 0.01
-shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/pixelate = true
-shader_parameter/roll = true
-shader_parameter/roll_speed = 8.0
-shader_parameter/roll_size = 15.0
-shader_parameter/roll_variation = 1.8
-shader_parameter/distort_intensity = 0.002
-shader_parameter/noise_opacity = 0.02
-shader_parameter/noise_speed = 5.0
-shader_parameter/static_noise_intensity = 0.022
-shader_parameter/aberration = 0.00100005
-shader_parameter/brightness = 1.4
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.0
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = -0.36
-shader_parameter/vignette_opacity = 0.259
-
 [node name="Main" type="Node2D"]
 process_mode = 3
 script = ExtResource("1_7uwu3")
@@ -556,6 +532,7 @@ fixed_fps = 60
 local_coords = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_base_offset = Vector2(-2000, 2.08165e-12)
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground"]
@@ -609,10 +586,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -78.0
-offset_top = 317.5
-offset_right = 78.0
-offset_bottom = 382.5
+offset_left = -701.0
+offset_top = -108.0
+offset_right = -545.0
+offset_bottom = -43.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -624,25 +601,22 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_5ubab")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_5ubab")
 theme_override_styles/focus = SubResource("StyleBoxFlat_5ubab")
 text = "START"
-metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="Menu"]
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -219.5
-offset_top = -379.0
-offset_right = 219.5
-offset_bottom = -283.0
+offset_left = -715.0
+offset_top = 117.0
+offset_right = -47.0
+offset_bottom = 213.0
 grow_horizontal = 2
-grow_vertical = 2
 theme_override_colors/font_color = Color(2, 2, 2, 1)
 theme_override_font_sizes/font_size = 70
 text = "ORBITAL CLASH"
 horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
+
+[node name="Settings" parent="Menu" instance=ExtResource("14_2tnxb")]
 
 [node name="GridContainer" type="GridContainer" parent="Menu"]
 anchors_preset = 8
@@ -650,12 +624,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -356.0
-offset_top = -199.0
-offset_right = 356.0
-offset_bottom = 259.0
+offset_left = 198.0
+offset_top = -126.0
+offset_right = 1002.0
+offset_bottom = 332.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.79094, 0.79094)
 columns = 2
 
 [node name="MouseLeft" type="TextureRect" parent="Menu/GridContainer"]
@@ -751,18 +726,6 @@ mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="Barrel"]
 material = SubResource("ShaderMaterial_l1aja")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Barrel2" type="CanvasLayer" parent="."]
-visible = false
-
-[node name="ColorRect" type="ColorRect" parent="Barrel2"]
-material = SubResource("ShaderMaterial_k3dun")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -58,9 +58,13 @@ var planet_textures: Array[Texture2D] = [
 @onready var planet_captured_asp: AudioStreamPlayer = $PlanetCapturedASP
 @onready var enemy_planet_asp: AudioStreamPlayer = $EnemyPlanetASP
 @onready var speed_up_asp: AudioStreamPlayer = $SpeedUpASP
+@onready var graphics_low_button: Button = $CanvasLayer/Paused/Settings/Graphics/Low
+@onready var graphics_high_button: Button = $CanvasLayer/Paused/Settings/Graphics/High
 
 
 func _ready() -> void:
+	apply_graphics_quality()
+
 	speed_up_asp.play()
 	var start_planet := create_planet()
 	set_planet_to_player(start_planet)
@@ -74,6 +78,15 @@ func _ready() -> void:
 	play_button.button_down.connect(on_play_button_down)
 	restart_button.button_down.connect(on_restart_button_down)
 	pause_menu_restart_button.button_down.connect(on_pause_menu_restart_button_down)
+	graphics_low_button.button_down.connect(on_graphics_low_button_pressed)
+	graphics_high_button.button_down.connect(on_graphics_high_button_pressed)
+
+	if global.main.graphics_high:
+		graphics_low_button.modulate.v = 0.6
+		graphics_high_button.modulate.v = 1.0
+	else:
+		graphics_low_button.modulate.v = 1.0
+		graphics_high_button.modulate.v = 0.6
 
 	get_tree().create_timer(2.0).timeout.connect(create_enemy_planet)
 
@@ -126,6 +139,7 @@ func create_enemy_planet() -> void:
 		enemy.exhaust_line.clear_points()
 		enemy.exhaust_line.modulate = Main.ENEMY_COLORS[0]
 		enemy.exhaust_line.modulate.a = 0.2
+		apply_enemy_graphics_quality(enemy)
 
 	var scene: PackedScene = [fuel_scene, health_scene].pick_random()
 	var pickup: Area2D = scene.instantiate()
@@ -183,12 +197,15 @@ func physics_process_player(delta) -> void:
 			var r := v.length()
 			player.apply_central_force(d * GRAVITY * player.mass * planet.mass / (r ** 2.0))
 
-		for i in player.exhaust_lines.get_child_count():
-			var line: Line2D = player.exhaust_lines.get_child(i)
-			var point: Node2D = player.exhaust_points.get_child(i)
-			line.add_point(point.global_position)
-			if line.points.size() > 200:
-				line.remove_point(0)
+			for i in player.exhaust_lines.get_child_count():
+				var line: Line2D = player.exhaust_lines.get_child(i)
+				if speed_up_button.button_pressed or not global.main.graphics_high:
+					line.clear_points()
+				else:
+					var point: Node2D = player.exhaust_points.get_child(i)
+					line.add_point(point.global_position)
+					if line.points.size() > 200:
+						line.remove_point(0)
 
 	if current_time - player.last_fired_at >= 1.0 / PLAYER_FIRE_RATE and player.alive:
 		player.last_fired_at = current_time
@@ -238,12 +255,8 @@ func physics_process_bullets(delta: float) -> void:
 		if current_time - bullet.created_at > BULLET_LIFETIME:
 			bullet.queue_free()
 
-		# We don't do trails when speeding up. Without this, speeding up casues
-		# lag when there are lots of enemies in the world.
-		if speed_up_button.button_pressed:
-			# If we didn't clear points here, trails would look wrong after
-			# speeding up, since there would be a single massive line segment
-			# created.
+		# Optimization - perf testing proved this is important
+		if speed_up_button.button_pressed or not global.main.graphics_high:
 			bullet.line.clear_points()
 		else:
 			bullet.line.add_point(bullet.global_position)
@@ -262,12 +275,8 @@ func physics_process_enemy(delta: float) -> void:
 		enemy.position = enemy.planet.position + Vector2.from_angle(enemy.planet_theta) * enemy.planet_r
 		var velocity := (enemy.position - last_position) / delta
 
-		# We don't do trails when speeding up. Without this, speeding up casues
-		# lag when there are lots of enemies in the world.
-		if speed_up_button.button_pressed:
-			# If we didn't clear points here, trails would look wrong after
-			# speeding up, since there would be a single massive line segment
-			# created.
+		# Optimization - perf testing proved this is important
+		if speed_up_button.button_pressed or not global.main.graphics_high:
 			enemy.exhaust_line.clear_points()
 		else:
 			enemy.exhaust_line.add_point(enemy.global_position)
@@ -547,3 +556,37 @@ func update_enemy_planet_indicator() -> void:
 		var p := enemy_planet_indicator_text.position
 		enemy_planet_indicator_arrow.position = p + dir * r_2
 		enemy_planet_indicator_arrow.rotation = theta
+
+
+func apply_graphics_quality() -> void:
+	var mode := Node.PROCESS_MODE_INHERIT if global.main.graphics_high else Node.PROCESS_MODE_DISABLED
+	player.shoot_particles.visible = global.main.graphics_high
+	player.shoot_particles.process_mode = mode
+	player.exhaust.visible = global.main.graphics_high
+	player.exhaust.process_mode = mode
+	player.explosion_particles.visible = global.main.graphics_high
+	player.explosion_particles.process_mode = mode
+	for enemy: Enemy in get_tree().get_nodes_in_group("enemies"):
+		apply_enemy_graphics_quality(enemy)
+
+
+func apply_enemy_graphics_quality(enemy: Enemy) -> void:
+	var mode := Node.PROCESS_MODE_INHERIT if global.main.graphics_high else Node.PROCESS_MODE_DISABLED
+	enemy.shoot_particles.visible = global.main.graphics_high
+	enemy.shoot_particles.process_mode = mode
+	enemy.explosion_particles.visible = global.main.graphics_high
+	enemy.explosion_particles.process_mode = mode
+
+
+func on_graphics_low_button_pressed() -> void:
+	graphics_low_button.modulate.v = 1.0
+	graphics_high_button.modulate.v = 0.6
+	global.main.on_graphics_low_button_pressed()
+	apply_graphics_quality()
+
+
+func on_graphics_high_button_pressed() -> void:
+	graphics_low_button.modulate.v = 0.6
+	graphics_high_button.modulate.v = 1.0
+	global.main.on_graphics_high_button_pressed()
+	apply_graphics_quality()
