@@ -1,6 +1,5 @@
 Todo:
 
-- Fix laggy FF
 - Shader precompile step
 - Change splash screen
 - Export
@@ -17,11 +16,11 @@ Todo:
 - Game balance
 - Submit to jam
 - Settings
-- Fix speed up performance issues
+- Add rim lighting to flat looking planets then rerender
+- Give pickups an idle sprite shader
 
 Ideas:
 
-- Give pickups an idle sprite shader
 - Use other sprite shaders on other things in the game
 - Make nebula texture seamless
 - Custom loading screen
@@ -67,3 +66,10 @@ Ideas:
   - Bullet collision
   - Bullet disappear
   - Detect enemy planet, radar pulse and ping sound
+- Initial experience is confusing for new players
+  - It's not clear what the player is supposed to do
+  - Players think the enemy planet indicator is pointing to the home planet so
+    they "attack" the home planet
+  - Players don't understand physics so they boost too much and overshoot their
+    destination
+- Bug: trails disappear when fast forwarding

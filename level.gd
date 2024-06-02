@@ -238,9 +238,17 @@ func physics_process_bullets(delta: float) -> void:
 		if current_time - bullet.created_at > BULLET_LIFETIME:
 			bullet.queue_free()
 
-		bullet.line.add_point(bullet.global_position)
-		if bullet.line.points.size() > 30:
-			bullet.line.remove_point(0)
+		# We don't do trails when speeding up. Without this, speeding up casues
+		# lag when there are lots of enemies in the world.
+		if speed_up_button.button_pressed:
+			# If we didn't clear points here, trails would look wrong after
+			# speeding up, since there would be a single massive line segment
+			# created.
+			bullet.line.clear_points()
+		else:
+			bullet.line.add_point(bullet.global_position)
+			if bullet.line.points.size() > 30:
+				bullet.line.remove_point(0)
 
 
 func physics_process_enemy(delta: float) -> void:
@@ -254,9 +262,17 @@ func physics_process_enemy(delta: float) -> void:
 		enemy.position = enemy.planet.position + Vector2.from_angle(enemy.planet_theta) * enemy.planet_r
 		var velocity := (enemy.position - last_position) / delta
 
-		enemy.exhaust_line.add_point(enemy.global_position)
-		if enemy.exhaust_line.points.size() > 200:
-			enemy.exhaust_line.remove_point(0)
+		# We don't do trails when speeding up. Without this, speeding up casues
+		# lag when there are lots of enemies in the world.
+		if speed_up_button.button_pressed:
+			# If we didn't clear points here, trails would look wrong after
+			# speeding up, since there would be a single massive line segment
+			# created.
+			enemy.exhaust_line.clear_points()
+		else:
+			enemy.exhaust_line.add_point(enemy.global_position)
+			if enemy.exhaust_line.points.size() > 200:
+				enemy.exhaust_line.remove_point(0)
 
 		if not player.exploded:
 			var fire_rate := ENEMY_FIRE_RATE
