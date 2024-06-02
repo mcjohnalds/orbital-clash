@@ -1,6 +1,5 @@
 Todo:
 
-- Settings
 - Remove button focus highlight
 - Add rim lighting to flat looking planets then rerender
 - Give pickups an idle sprite shader

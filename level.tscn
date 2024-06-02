@@ -410,9 +410,9 @@ horizontal_alignment = 1
 
 [node name="Settings" parent="CanvasLayer/Paused" instance=ExtResource("3_4f3tt")]
 layout_mode = 1
-offset_left = -210.0
+offset_left = -220.0
 offset_top = 108.0
-offset_right = -210.0
+offset_right = -220.0
 offset_bottom = 108.0
 
 [node name="GameOverASP" type="AudioStreamPlayer" parent="."]

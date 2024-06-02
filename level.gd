@@ -60,6 +60,8 @@ var planet_textures: Array[Texture2D] = [
 @onready var speed_up_asp: AudioStreamPlayer = $SpeedUpASP
 @onready var graphics_low_button: Button = $CanvasLayer/Paused/Settings/Graphics/Low
 @onready var graphics_high_button: Button = $CanvasLayer/Paused/Settings/Graphics/High
+@onready var vsync_off_button: Button = $CanvasLayer/Paused/Settings/Vsync/Off
+@onready var vsync_on_button: Button = $CanvasLayer/Paused/Settings/Vsync/On
 
 
 func _ready() -> void:
@@ -80,6 +82,8 @@ func _ready() -> void:
 	pause_menu_restart_button.button_down.connect(on_pause_menu_restart_button_down)
 	graphics_low_button.button_down.connect(on_graphics_low_button_pressed)
 	graphics_high_button.button_down.connect(on_graphics_high_button_pressed)
+	vsync_off_button.button_down.connect(on_vsync_off_button_pressed)
+	vsync_on_button.button_down.connect(on_vsync_on_button_pressed)
 
 	if global.main.graphics_high:
 		graphics_low_button.modulate.v = 0.6
@@ -87,6 +91,13 @@ func _ready() -> void:
 	else:
 		graphics_low_button.modulate.v = 1.0
 		graphics_high_button.modulate.v = 0.6
+
+	if global.main.vsync:
+		vsync_off_button.modulate.v = 0.6
+		vsync_on_button.modulate.v = 1.0
+	else:
+		vsync_off_button.modulate.v = 1.0
+		vsync_on_button.modulate.v = 0.6
 
 	get_tree().create_timer(2.0).timeout.connect(create_enemy_planet)
 
@@ -590,3 +601,15 @@ func on_graphics_high_button_pressed() -> void:
 	graphics_high_button.modulate.v = 1.0
 	global.main.on_graphics_high_button_pressed()
 	apply_graphics_quality()
+
+
+func on_vsync_off_button_pressed() -> void:
+	global.main.on_vsync_off_button_pressed()
+	vsync_off_button.modulate.v = 1.0
+	vsync_on_button.modulate.v = 0.6
+
+
+func on_vsync_on_button_pressed() -> void:
+	global.main.on_vsync_on_button_pressed()
+	vsync_off_button.modulate.v = 0.6
+	vsync_on_button.modulate.v = 1.0

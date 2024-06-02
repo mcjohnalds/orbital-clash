@@ -9,6 +9,8 @@ var level: Level
 @onready var parallax_background: ParallaxBackground = $ParallaxBackground
 @onready var graphics_low_button: Button = $Menu/Settings/Graphics/Low
 @onready var graphics_high_button: Button = $Menu/Settings/Graphics/High
+@onready var vsync_off_button: Button = $Menu/Settings/Vsync/Off
+@onready var vsync_on_button: Button = $Menu/Settings/Vsync/On
 @onready var film_grain: CanvasLayer = $FilmGrain
 @onready var barrel: CanvasLayer = $Barrel
 @onready var nebula_1: Node2D = $ParallaxBackground/ParallaxLayer2
@@ -16,6 +18,7 @@ var level: Level
 @onready var nebula_3: CanvasLayer = $ParallaxBackground2
 var stars_multiply: FastNoiseLite = preload("res://stars_multiply.tres")
 var graphics_high := true
+var vsync := true
 
 const ENEMY_COLORS: Array[Color] = [
 	Color("A570B5"),
@@ -35,10 +38,14 @@ const PLAYER_COLORS: Array[Color] = [
 
 
 func _ready() -> void:
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+
 	global.main = self
 	start_button.button_down.connect(on_start_button_pressed)
 	graphics_low_button.button_down.connect(on_graphics_low_button_pressed)
 	graphics_high_button.button_down.connect(on_graphics_high_button_pressed)
+	vsync_off_button.button_down.connect(on_vsync_off_button_pressed)
+	vsync_on_button.button_down.connect(on_vsync_on_button_pressed)
 
 	if graphics_high:
 		graphics_low_button.modulate.v = 0.6
@@ -47,6 +54,12 @@ func _ready() -> void:
 		graphics_low_button.modulate.v = 1.0
 		graphics_high_button.modulate.v = 0.6
 
+	if vsync:
+		vsync_off_button.modulate.v = 0.6
+		vsync_on_button.modulate.v = 1.0
+	else:
+		vsync_off_button.modulate.v = 1.0
+		vsync_on_button.modulate.v = 0.6
 
 func on_start_button_pressed() -> void:
 	menu.visible = false
@@ -91,3 +104,19 @@ func on_graphics_high_button_pressed() -> void:
 	nebula_1.visible = true
 	nebula_2.visible = true
 	nebula_3.visible = true
+
+
+func on_vsync_off_button_pressed() -> void:
+	global.interface_asp.play()
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	vsync_off_button.modulate.v = 1.0
+	vsync_on_button.modulate.v = 0.6
+	vsync = false
+
+
+func on_vsync_on_button_pressed() -> void:
+	global.interface_asp.play()
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+	vsync_off_button.modulate.v = 0.6
+	vsync_on_button.modulate.v = 1.0
+	vsync = true
