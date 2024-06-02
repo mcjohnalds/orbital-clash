@@ -14,7 +14,7 @@ const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
 const ENEMY_DAMAGE := 0.17
-const PLANET_DAMAGE := 0.17
+const PLANET_DAMAGE := 1.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
 var planets_captured := 0
@@ -176,7 +176,7 @@ func physics_process_player(delta) -> void:
 
 	player.thrust_asp.stream_paused = not thrusting
 
-	if player.visible:
+	if not player.exploded:
 		for planet: Planet in get_tree().get_nodes_in_group("planets"):
 			var v := planet.global_position - player.global_position
 			var d := v.normalized()
@@ -258,7 +258,7 @@ func physics_process_enemy(delta: float) -> void:
 		if enemy.exhaust_line.points.size() > 200:
 			enemy.exhaust_line.remove_point(0)
 
-		if player.visible:
+		if not player.exploded:
 			var fire_rate := ENEMY_FIRE_RATE
 			if current_time - enemy.last_fired_at >= 1.0 / fire_rate:
 				enemy.shoot_asp.play()
@@ -370,7 +370,7 @@ func planet_has_living_enemy(planet: Planet) -> bool:
 
 
 func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
-	if body is Player and bullet.source == Bullet.Source.ENEMY and player.visible:
+	if body is Player and bullet.source == Bullet.Source.ENEMY and not player.exploded:
 		player.hit_asp.play()
 		var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
 		if not damage_cooldown and player.alive:
@@ -382,7 +382,7 @@ func on_bullet_body_entered(body: Node2D, bullet: Bullet) -> void:
 
 
 func on_planet_body_entered(body: Node2D, planet: Node2D) -> void:
-	if body is Player and player.visible:
+	if body is Player and not player.exploded:
 		player.hit_asp.play()
 		var damage_cooldown := current_time - player.last_hit_at < PLAYER_DAMAGE_COOLDOWN
 		if not damage_cooldown and player.alive:
@@ -412,8 +412,13 @@ func kill_player() -> void:
 	# It takes 1.65 seconds for the explosion sound effect to reach the climax
 	await get_tree().create_timer(1.65).timeout
 
+	for p: GPUParticles2D in player.explosion_particles.get_children():
+		p.emitting = true
 	bars.visible = false
-	player.visible = false
+	player.exploded = true
+	player.sprite.visible = false
+	player.exhaust.visible = false
+	player.exhaust_lines.visible = false
 	player.alarm_asp.stop()
 	# Slow down camera to a stop
 	player.linear_damp = 2.0

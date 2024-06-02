@@ -1,18 +1,9 @@
 Todo:
 
 - Particle effects
-  - Player hit
-  - Player crash
-  - Player death spiral
-  - Player explosion
-  - Enemy shoot
   - Enemy explosion
-  - Planet captured
-  - Pickup idle
-  - Pickup collected
-  - Bullet collision
-  - Bullet disappear
-- Fix planet and nebula colors
+  - Enemy shoot
+- Cursor
 - Animate start screen
 - Settings
 - Game balance
@@ -66,3 +57,15 @@ Ideas:
 - Make speed up go faster over time and raise the pitch
 - Make trails exist in screen space
 - Add particle effects and sounds for player for RCS thrusters
+- Fix nebula colors
+- Particle effects
+  - Player hit
+  - Player crash
+  - Player death spiral
+  - Enemy shoot
+  - Planet captured
+  - Pickup idle
+  - Pickup collected
+  - Bullet collision
+  - Bullet disappear
+  - Detect enemy planet, radar pulse and ping sound
