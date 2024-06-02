@@ -77,7 +77,7 @@ blend_mode = 1
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.9416, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_wjg30"]
+[sub_resource type="CurveTexture" id="CurveTexture_2gxps"]
 curve = SubResource("Curve_kewgy")
 
 [sub_resource type="Curve" id="Curve_rlejd"]
@@ -86,28 +86,28 @@ _data = [Vector2(0, 2.13163e-14), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 metadata/_snap_enabled = true
 
-[sub_resource type="CurveTexture" id="CurveTexture_6yv0j"]
+[sub_resource type="CurveTexture" id="CurveTexture_yxqdc"]
 curve = SubResource("Curve_rlejd")
 
 [sub_resource type="Curve" id="Curve_o6fvu"]
 _data = [Vector2(0, 1), 0.0, 0.0212564, 0, 0, Vector2(1, 0), -1.72708, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_n8215"]
+[sub_resource type="CurveTexture" id="CurveTexture_yt311"]
 curve = SubResource("Curve_o6fvu")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8u8ur"]
 particle_flag_disable_z = true
 angle_max = 360.0
-angle_curve = SubResource("CurveTexture_6yv0j")
+angle_curve = SubResource("CurveTexture_yxqdc")
 spread = 180.0
 initial_velocity_min = 20.0
 initial_velocity_max = 20.0
 gravity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 scale_min = 0.1
 scale_max = 0.12
-scale_curve = SubResource("CurveTexture_n8215")
-alpha_curve = SubResource("CurveTexture_wjg30")
+scale_curve = SubResource("CurveTexture_yt311")
+alpha_curve = SubResource("CurveTexture_2gxps")
 turbulence_enabled = true
 turbulence_noise_strength = 0.1
 turbulence_noise_scale = 1.0

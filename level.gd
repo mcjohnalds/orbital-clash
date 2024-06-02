@@ -284,6 +284,8 @@ func physics_process_enemy(delta: float) -> void:
 				bullet.sprite.modulate = Main.ENEMY_COLORS[0]
 				bullet.line.visible = true
 
+				enemy.shoot_particles.restart()
+				enemy.shoot_particles.emitting = true
 
 func physics_process_ui() -> void:
 	health_bar_fill.size.x = health_bar.size.x * player.health

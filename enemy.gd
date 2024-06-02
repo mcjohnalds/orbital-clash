@@ -12,3 +12,4 @@ var alive: bool = true
 @onready var exhaust_line: Line2D = $ExhaustLine
 @onready var explosion_particles: Node2D = $ExplosionParticles
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var shoot_particles: GPUParticles2D = $ShootParticles
