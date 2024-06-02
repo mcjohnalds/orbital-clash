@@ -1,7 +1,5 @@
 Todo:
 
-- Cursor
-- Animate start screen
 - Settings
 - Game balance
 - Window size

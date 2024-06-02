@@ -6,6 +6,7 @@ var level: Level
 @onready var menu: CanvasLayer = $Menu
 @onready var start_button: Button = $Menu/StartButton
 @onready var level_node: Node2D = $Level
+@onready var parallax_background: ParallaxBackground = $ParallaxBackground
 var stars_multiply: FastNoiseLite = preload("res://stars_multiply.tres")
 var last_stars_multiply_update_time := -1000.0
 
@@ -35,6 +36,7 @@ func on_start_button_pressed() -> void:
 	level = level_scene.instantiate()
 	level_node.add_child(level)
 	global.interface_asp.play()
+	parallax_background.scroll_base_offset = Vector2.ZERO
 
 
 func _input(event: InputEvent) -> void:
@@ -42,7 +44,9 @@ func _input(event: InputEvent) -> void:
 		get_tree().quit()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var t := Time.get_ticks_msec() / 1000.0 * 5.0
 	if stars_multiply and t - last_stars_multiply_update_time > 1.0:
 		stars_multiply.offset = Vector3(t, 0.0, 0.0)
+	if not level:
+		parallax_background.scroll_base_offset += Vector2.ONE * delta * 100.0

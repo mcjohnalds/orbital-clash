@@ -72,31 +72,31 @@ shader_parameter/vignette_opacity = 0.259
 process_mode = 3
 script = ExtResource("1_7uwu3")
 
-[node name="ParallaxBackground1" type="ParallaxBackground" parent="."]
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
-[node name="ParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.01, 0.01)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="Stars" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer1"]
+[node name="Stars" type="TextureRect" parent="ParallaxBackground/ParallaxLayer1"]
 offset_right = 5120.0
 offset_bottom = 5120.0
 texture = ExtResource("2_klhy2")
 stretch_mode = 1
 
-[node name="Multiply" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer1"]
+[node name="Multiply" type="TextureRect" parent="ParallaxBackground/ParallaxLayer1"]
 material = SubResource("CanvasItemMaterial_k6oio")
 offset_right = 5120.0
 offset_bottom = 5120.0
 texture = SubResource("NoiseTexture2D_5vam5")
 stretch_mode = 1
 
-[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.05, 0.05)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="Nebula1" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer2"]
+[node name="Nebula1" type="TextureRect" parent="ParallaxBackground/ParallaxLayer2"]
 modulate = Color(0.670588, 0.466667, 0.733333, 0.105882)
 material = SubResource("CanvasItemMaterial_8vcyj")
 offset_right = 5120.0
@@ -104,11 +104,11 @@ offset_bottom = 5120.0
 texture = ExtResource("4_vylts")
 stretch_mode = 1
 
-[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground1"]
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.1, 0.1)
 motion_mirroring = Vector2(5120, 5120)
 
-[node name="Nebula2" type="TextureRect" parent="ParallaxBackground1/ParallaxLayer3"]
+[node name="Nebula2" type="TextureRect" parent="ParallaxBackground/ParallaxLayer3"]
 modulate = Color(0.647059, 0.439216, 0.709804, 0.439216)
 material = SubResource("CanvasItemMaterial_8vcyj")
 offset_right = 5120.0
