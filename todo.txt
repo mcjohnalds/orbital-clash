@@ -1,5 +1,8 @@
 Todo:
 
+- Fix laggy FF
+- Shader precompile step
+- Change splash screen
 - Export
   - Web
   - Windows
