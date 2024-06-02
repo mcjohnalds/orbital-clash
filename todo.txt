@@ -1,7 +1,6 @@
 Todo:
 
 - Particle effects
-  - Enemy explosion
   - Enemy shoot
 - Cursor
 - Animate start screen

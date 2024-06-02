@@ -10,3 +10,5 @@ var alive: bool = true
 @onready var shoot_asp: AudioStreamPlayer2D = $ShootASP
 @onready var explosion_asp: AudioStreamPlayer2D = $ExplosionASP
 @onready var exhaust_line: Line2D = $ExhaustLine
+@onready var explosion_particles: Node2D = $ExplosionParticles
+@onready var sprite: Sprite2D = $Sprite2D

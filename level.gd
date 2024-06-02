@@ -14,7 +14,7 @@ const PLANET_ENEMY_COLOR := Color("806787")
 const PLANET_PLAYER_COLOR := Color("678784")
 const GRAVITY := 9.8
 const ENEMY_DAMAGE := 0.17
-const PLANET_DAMAGE := 1.17
+const PLANET_DAMAGE := 0.17
 const PLAYER_DAMAGE_COOLDOWN := 8.0
 const PLANET_BOUNCE_SPEED := 300.0
 var planets_captured := 0
@@ -331,9 +331,13 @@ func on_bullet_area_entered(area: Area2D, bullet: Bullet) -> void:
 
 		bullet.queue_free()
 		enemy.alive = false
-		enemy.visible = false
+		enemy.sprite.visible = false
+		enemy.exhaust_line.visible = false
 		enemy.explosion_asp.finished.connect(enemy.queue_free)
 		enemy.explosion_asp.play()
+		for p: GPUParticles2D in enemy.explosion_particles.get_children():
+			p.emitting = true
+		get_tree().create_timer(10.0).timeout.connect(enemy.queue_free)
 
 		if planet_has_living_enemy(enemy.planet):
 			return
@@ -429,6 +433,7 @@ func kill_player() -> void:
 	planets_captured_label_center.text = "PLANETS CAPTURED: %s" % planets_captured
 	planets_captured_label_center.visible = true
 	game_over_asp.play()
+
 
 # https://en.wikipedia.org/wiki/Ellipse#Polar_form_relative_to_center
 func get_ellipse_r(theta: float, size: Vector2) -> float:
