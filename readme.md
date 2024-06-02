@@ -1,5 +1,7 @@
 ![Orbital Clash](marketing/itch_banner.png)
 
+![Trailer](marketing/trailer.mp4)
+
 Game built for [Untitled Game Jam
 #93](https://itch.io/jam/untitled-game-jam-93).
 
