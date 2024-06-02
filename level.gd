@@ -408,6 +408,7 @@ func kill_player() -> void:
 	planet_captured_label.visible = false
 	pause_button.visible = false
 	speed_up_button.visible = false
+	enemy_planet_indicator.visible = false
 	player.health = 0.0
 	player.boost = 0.0
 	player.alarm_asp.play()

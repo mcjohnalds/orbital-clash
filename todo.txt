@@ -1,8 +1,5 @@
 Todo:
 
-- Settings
-- Game balance
-- Window size
 - Export
   - Web
   - Windows
@@ -14,7 +11,10 @@ Todo:
   - Windows
   - Mac
   - Linux
+- Game balance
 - Submit to jam
+- Settings
+- Fix speed up performance issues
 
 Ideas:
 
