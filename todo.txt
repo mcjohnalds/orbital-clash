@@ -1,28 +1,17 @@
 Todo:
 
-- Shader precompile step
 - Change splash screen
-- Export
-  - Web
-  - Windows
-  - Mac
-  - Linux
-- Create jam page
-- Test
-  - Web
-  - Windows
-  - Mac
-  - Linux
 - Game balance
-- Submit to jam
 - Settings
 - Add rim lighting to flat looking planets then rerender
 - Give pickups an idle sprite shader
+- Make nebula texture seamless
+- Add a border to the web export
+- Improve CPU performance when speeding up
 
 Ideas:
 
 - Use other sprite shaders on other things in the game
-- Make nebula texture seamless
 - Custom loading screen
 - Different music at different times
 - Random space ambient noises
